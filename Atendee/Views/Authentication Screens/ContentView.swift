@@ -3,21 +3,25 @@
 //  Atendee
 //
 //  Created by Muhammad Farid Ullah on 03/04/2023.
-//
 
+
+//done
 import SwiftUI
+//import UIOnboarding
+import UIKit
+import SwiftfulRouting
 
 struct ContentView: View {
+    //@AppStorage("isLoginView") private var showingOnboarding = true
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        Text("Nothing")
+        RouterView { router in
+            UserAdmn_loginOptionsView(router: router)
         }
-        .padding()
     }
 }
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
