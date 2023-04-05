@@ -177,14 +177,14 @@ class Local_FileManager2 {
         guard let data = image.jpegData(compressionQuality: 1) else { return }
 
         //Checks if file exists, removes it if so.
-        if FileManager.default.fileExists(atPath: fileURL.path) {
-            do {
-                try FileManager.default.removeItem(atPath: fileURL.path)
-                print("Removed old image")
-            } catch let removeError {
-                print("couldn't remove file at path", removeError)
-            }
-        }
+//        if FileManager.default.fileExists(atPath: fileURL.path) {
+//            do {
+//                try FileManager.default.removeItem(atPath: fileURL.path)
+//                print("Removed old image")
+//            } catch let removeError {
+//                print("couldn't remove file at path", removeError)
+//            }
+//        }
 
         do {
             try data.write(to: fileURL)

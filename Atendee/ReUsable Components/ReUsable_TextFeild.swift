@@ -17,6 +17,8 @@ struct ReUsable_TextFeild: View {
         HStack {
             Image(systemName: imageName)
             TextField(title, text: $email)
+                .autocorrectionDisabled()
+                .textInputAutocapitalization(.none)
                 .foregroundColor(.secondary)
                 .font(Font.body.weight(.bold))
         }

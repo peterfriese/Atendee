@@ -15,9 +15,6 @@ struct HomeView: View {
     @EnvironmentObject var userAdmin_vm: Authentication_AdminUser_VM
     @State private var isShowingadd_view = false
     @Environment(\.managedObjectContext) var moc
-    
-//    @FetchRequest(entity: User_CoreDM.entity(), sortDescriptors: []) var cachedUsers: FetchedResults<User_CoreDM>
-    //let currentUser = Auth.auth().currentUser?.email ?? "UnknowUserHomeView"
 
     @State var profileImage: Data = .init(count: 0)
     
@@ -33,82 +30,48 @@ struct HomeView: View {
                     Text(userAdmin_vm.newMessage)
                         .foregroundColor(.red)
                     Button("Check all users") {
-//                        guard let users = user_vm.users else { return }
-//
-//                        print(users)
+                        userAdmin_vm.getUsers()
                     }
-                    Button("Delete users") {
-//                        guard let users = user_vm.users else { return }
-//
-//                        print(users)
-                    }
-                    
-//                    .onAppear {
-//                        user_vm.fetchUsersFm()
-////                        if user_vm.users.isEmpty {
-////                            let db = Firestore.firestore()
-////                            let ref = db.collection(user_vm.currentUser_email)
-////                            ref.getDocuments { snapshot, error in
-////                                guard error == nil else {
-////                                    print("There was an error while fetching data: \(error?.localizedDescription ?? "")")
-////                                    return
-////                                }
-////
-////                                if let snapshot = snapshot {
-////                                    for doc in snapshot.documents {
-////                                        let id = doc.documentID
-////                                        let name = doc.get("name") as? String ?? ""
-////                                        let serialNo = doc.get("serialNo") as? String ?? ""
-////                                        let profileImageURL = doc.get("profileImageURL") as? String ?? "nothing"
-////                                        let user = User(id: id, name: name, serialNo: serialNo, profileImageURL: profileImageURL)
-////
-////                                        self.fileManager.saveData([user], fileName: user_vm.fileName)
-////
-////                                        //self.users.append(user)
-////                                    }
-////                                }
-////
-////                                // Do something with the retrieved user objects here
-////                                //print("Users loaded: \(self.users)")
-////                            }
-////                        }
-//                    }
-                    .navigationTitle("Users")
-                    //.navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Button("Add") {
-                                isShowingadd_view = true
-                                let currentUser = Auth.auth().currentUser?.uid ?? "no uid"
-                                print("Here is the current logged in user: \(currentUser)")
-                            }
-                        }
-                        ToolbarItem(placement: .navigationBarLeading) {
-                            Button("SignOut") {
-                                userAdmin_vm.currentUser_email = "UnknownEmail" //added
-                                userAdmin_vm.users = []
-                                //deleteAllObjects()
-                                userAdmin_vm.admin_signOut()
-                                userAdmin_vm.isUserLoggedIn = false
-                            }
-                            .tint(.red)
-                        }
-                    }
-                    .sheet(isPresented: $isShowingadd_view, onDismiss: nil) {
-                        Add_UserView()
+                    Button("Fetch Users to FM") {
+                        userAdmin_vm.fetchUsers2()
                     }
                 }
                 .onAppear() {
                     print("here is a user email from homeView: \(userAdmin_vm.currentUser_email)")
+                }
+                .navigationTitle("Users")
+                //.navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Add") {
+                            isShowingadd_view = true
+                            let currentUser = Auth.auth().currentUser?.uid ?? "no uid"
+                            print("Here is the current logged in user: \(currentUser)")
+                        }
+                    }
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button("SignOut") {
+                            userAdmin_vm.currentUser_email = "UnknownEmail" //added
+                            //userAdmin_vm.users = []
+                            //deleteAllObjects()
+                            userAdmin_vm.admin_signOut()
+                            //userAdmin_vm.isUserLoggedIn = false
+                            userAdmin_vm.signedIn = false
+                        }
+                        .tint(.red)
+                    }
+                }
+                .sheet(isPresented: $isShowingadd_view, onDismiss: nil) {
+                    Add_UserView()
                 }
             }
         }
             
     }
 
-    var filteredList: [User] {
-        return userAdmin_vm.users.sorted { $0.name < $1.name }
-    }
+//    var filteredList: [User] {
+//        return userAdmin_vm.users.sorted { $0.name < $1.name }
+//    }
     
 //    func deleteAllObjects() {
 //        for user in user_vm.users {
@@ -413,4 +376,45 @@ struct HomeView: View {
          try? moc.save()
      }
  }
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+//                    .onAppear {
+//                        user_vm.fetchUsersFm()
+////                        if user_vm.users.isEmpty {
+////                            let db = Firestore.firestore()
+////                            let ref = db.collection(user_vm.currentUser_email)
+////                            ref.getDocuments { snapshot, error in
+////                                guard error == nil else {
+////                                    print("There was an error while fetching data: \(error?.localizedDescription ?? "")")
+////                                    return
+////                                }
+////
+////                                if let snapshot = snapshot {
+////                                    for doc in snapshot.documents {
+////                                        let id = doc.documentID
+////                                        let name = doc.get("name") as? String ?? ""
+////                                        let serialNo = doc.get("serialNo") as? String ?? ""
+////                                        let profileImageURL = doc.get("profileImageURL") as? String ?? "nothing"
+////                                        let user = User(id: id, name: name, serialNo: serialNo, profileImageURL: profileImageURL)
+////
+////                                        self.fileManager.saveData([user], fileName: user_vm.fileName)
+////
+////                                        //self.users.append(user)
+////                                    }
+////                                }
+////
+////                                // Do something with the retrieved user objects here
+////                                //print("Users loaded: \(self.users)")
+////                            }
+////                        }
+//                    }
+ 
  */

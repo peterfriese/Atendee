@@ -9,18 +9,6 @@ import SwiftUI
 import SwiftUI
 import FirebaseCore
 
-
-class AppDelegate: NSObject, UIApplicationDelegate {
-  func application(_ application: UIApplication,
-                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-      
-    FirebaseApp.configure()
-
-    return true
-  }
-}
-
-
 @main
 struct AtendeeApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
@@ -28,7 +16,7 @@ struct AtendeeApp: App {
     
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            ContentView()
                 .environmentObject(userAdmin_vm)
         }
     }

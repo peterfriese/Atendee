@@ -26,15 +26,6 @@ struct Login_View: View {
             }
         }
         .navigationBarBackButtonHidden(true)
-//        .onAppear { //it ensure that the user is always logged out when the Login_View is presented.
-//            print("the user is")//check user
-//            if let user = Auth.auth().currentUser {
-//                //user_vm.signOut()
-//                user_vm.isUserLoggedIn = false
-//                print("Firuser: \(user)")
-//                print("current user is available...")
-//            }
-//        }
     }
     
     var loginView: some View {
@@ -85,11 +76,11 @@ struct Login_View: View {
                 //MARK: login button.
                 
                 ReUsable_Button(
-                    title: "Login", buttonBackgroundColor: userAdmin_vm.email.isEmpty ? Color("softbutton_Color").opacity(0.4) : Color("softbutton_Color")) {
+                    title: "Login", buttonBackgroundColor: userAdmin_vm.email.isEmpty || userAdmin_vm.password.isEmpty ? Color("softbutton_Color").opacity(0.4) : Color("softbutton_Color")) {
                         userAdmin_vm.validateEmail_Password_adminLogin()
                 }
                 .padding(.top)
-                .disabled(userAdmin_vm.email.isEmpty && userAdmin_vm.password.isEmpty)
+                .disabled(userAdmin_vm.email.isEmpty || userAdmin_vm.password.isEmpty)
                 
                 //MARK: The OR section.
                 VStack {
@@ -160,15 +151,6 @@ struct Login_View: View {
             }
             
             
-        }
-        .onAppear {
-//            Auth.auth().addStateDidChangeListener { auth, user in
-//                print("loginView c_user: \(String(describing: auth.currentUser))")
-//                if user != nil {
-//                    userAdmin_vm.isUserLoggedIn = true
-//                    print("Akh drama: \(userAdmin_vm.isUserLoggedIn)")
-//                }
-//            }
         }
         
     }

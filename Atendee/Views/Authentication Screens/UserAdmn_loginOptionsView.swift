@@ -15,11 +15,14 @@ struct UserAdmn_loginOptionsView: View {
     
     var body: some View {
         NavigationView {
-            if userAdmin_vm.isUserLoggedIn {
-                MainView()
-            } else {
-                Two_optionsView
-            }
+            
+            Two_optionsView
+            
+//            if userAdmin_vm.isUserLoggedIn {
+//                MainView()
+//            } else {
+//                Two_optionsView
+//            }
         }
         .navigationBarBackButtonHidden(true)
         .onAppear {//it ensure that the user is always logged out when the Login_View is presented.
@@ -79,6 +82,6 @@ struct UserAdmn_loginOptionsView: View {
 
 //struct UserAdmn_loginOptionsView_Previews: PreviewProvider {
 //    static var previews: some View {
-//        UserAdmn_loginOptionsView()
+//        UserAdmn_loginOptionsView(router: AnyRouter(object: Router.self as! Router))
 //    }
 //}

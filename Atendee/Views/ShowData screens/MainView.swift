@@ -33,10 +33,6 @@ struct MainView: View {
                     Label("Profile", systemImage: "person")
                 }
             
-        }
-//        .onAppear {
-//            au
-//        }
-        
+        }        
     }
 }
