@@ -7,8 +7,6 @@
 
 import SwiftUI
 struct MainView: View {
-    //@Environment(\.managedObjectContext) var moc
-//    @EnvironmentObject var user_vm: User_VM
     @EnvironmentObject var userAdmin_vm: Authentication_AdminUser_VM
     
     var body: some View {
@@ -34,5 +32,13 @@ struct MainView: View {
                 }
             
         }        
+    }
+}
+
+struct MainView_Previews: PreviewProvider {
+    @ObservedObject var userAdmin_vm  = Authentication_AdminUser_VM()
+    static var previews: some View {
+        MainView()
+            .environmentObject(Authentication_AdminUser_VM())
     }
 }

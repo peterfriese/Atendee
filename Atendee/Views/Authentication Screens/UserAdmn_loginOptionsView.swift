@@ -15,24 +15,9 @@ struct UserAdmn_loginOptionsView: View {
     
     var body: some View {
         NavigationView {
-            
             Two_optionsView
-            
-//            if userAdmin_vm.isUserLoggedIn {
-//                MainView()
-//            } else {
-//                Two_optionsView
-//            }
         }
         .navigationBarBackButtonHidden(true)
-        .onAppear {//it ensure that the user is always logged out when the Login_View is presented.
-//            if let user = Auth.auth().currentUser {
-//                //user_vm.signOut()
-//                print(user)
-//            }
-            //also work.
-            //user_vm.signOut()
-        }
     }
     
     var Two_optionsView: some View {
@@ -43,7 +28,7 @@ struct UserAdmn_loginOptionsView: View {
             VStack(alignment: .leading) {
                 HStack {
                     Spacer()
-                    ReUsable_Logo()
+                    ReUsable_Logo(width: 250)
                     Spacer()
                 }
                 Spacer()
@@ -63,14 +48,11 @@ struct UserAdmn_loginOptionsView: View {
                 
                 ReUsable_Button(title: "Login as a User", buttonBackgroundColor: Color("softbutton_Color")) {
                     let currentUser = Auth.auth().currentUser
-                    print("Here is the current user logged in user: \(currentUser)")
+                    //print("Here is the current user logged in user: \(currentUser)")
                     router.showScreen(.push) { router in
                         UserLogin_View(router: router)
                     }
                 }
-                
-                
-            
                 Spacer()
                 Spacer()
             }
@@ -80,8 +62,11 @@ struct UserAdmn_loginOptionsView: View {
     
 }
 
-//struct UserAdmn_loginOptionsView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        UserAdmn_loginOptionsView(router: AnyRouter(object: Router.self as! Router))
-//    }
-//}
+struct UserAdmn_loginOptionsView_Previews: PreviewProvider {
+    static var previews: some View {
+        RouterView { router in
+            UserAdmn_loginOptionsView(router: router)
+                .environmentObject(Authentication_AdminUser_VM())
+        }
+    }
+}

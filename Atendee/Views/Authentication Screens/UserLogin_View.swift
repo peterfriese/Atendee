@@ -26,16 +26,8 @@ struct UserLogin_View: View {
                 userLoginView
             }
         }
-        .navigationBarBackButtonHidden(true)
-        .onAppear {//it ensure that the user is always logged out when the Login_View is presented.
-            if let user = Auth.auth().currentUser {
-                //user_vm.signOut()
-                print("Firuser in login view: \(user)")
-                print("User is logedOut from UserLogin_View")
-            }
-            //also work.
-            //user_vm.signOut()
-        }
+        //.navigationBarBackButtonHidden(true)
+        .toolbarRole(.editor)
     }
     
     var userLoginView: some View {
@@ -44,17 +36,11 @@ struct UserLogin_View: View {
                 .ignoresSafeArea()
             
             VStack(alignment: .leading, spacing: 0) {
-                //MARK: The fitness Club logo.
-                HStack(alignment: .top) {
-                    
-                    ReUsable_BackButton {
-                        router.dismissScreen()
-                    }
-                    
-                    ReUsable_Logo()
-                        .padding(.leading, 20)
-                    
-                }.padding(.top, 7)
+                HStack {
+                    Spacer()
+                    ReUsable_Logo(width: 275)
+                    Spacer()
+                }
                 Spacer()
                 
                 Text("User Login")
@@ -74,25 +60,9 @@ struct UserLogin_View: View {
                         } else {
                             print("user is not exist...")
                             alertTitle = "user is not exist"
-
+                            
                         }
                     }
-                    
-                    
-//                    user_vm.userLogin(email: user_vm.email) { isAvailable in
-//                        if isAvailable {
-//                            print("Email is available")
-//                            alertTitle = "Email is available"
-//                            alertTitle = "SecretCode is available"
-//                            user_vm.currentUser = user_vm.email
-//                            user_vm.isUserLoggedIn = true
-//                            user_vm.fetchUsers()
-//                        } else {
-//                            print("Email is not available")
-//                            alertTitle = "Email is not available"
-//                        }
-//
-//                    }
                 }
                 
                 Text(alertTitle)
@@ -105,80 +75,13 @@ struct UserLogin_View: View {
             .padding(.horizontal)
         }
     }
-    
-//    var textFields: some View {
-//        Group {
-//            HStack {
-//                Image(systemName: "envelope.fill")
-//                TextField("Enter your gym incharge email", text: $user_vm.email)
-//                    .foregroundColor(.secondary)
-//                    .font(Font.body.weight(.bold))
-//            }
-//            .padding()
-//            .background(
-//                RoundedRectangle(cornerRadius: 10)
-//                    .fill(Color("backgroundColor"))
-//                    .softInnerShadow(RoundedRectangle(cornerRadius: 10), lightShadow: Color("shadow"))
-//            )
-//            .padding(.vertical)
-//
-//            HStack {
-//                Image(systemName: "envelope.fill")
-//                TextField("Secret Code", text: $secretCode)
-//                    .foregroundColor(.secondary)
-//                    .font(Font.body.weight(.bold))
-//            }
-//            .padding()
-//            .background(
-//                RoundedRectangle(cornerRadius: 10)
-//                    .fill(Color("backgroundColor"))
-//                    .softInnerShadow(RoundedRectangle(cornerRadius: 10), lightShadow: Color("shadow"))
-//            )
-//        }
-//    }
 }
 
-
-
-
-
-
-
-
-//struct UserLogin_View_Previews: PreviewProvider {
-//    static var previews: some View {
-//        UserLogin_View(router: AnyRouter(object: Router.self as! Router ))
-//    }
-//}
-
-
-//button
-/*
- //                Button {
- //                    user_vm.userLogin(email: user_vm.email) { isAvailable in
- //                        if isAvailable {
- //                            print("Email is available")
- //                            alertTitle = "Email is available"
- //                            user_vm.currentUser = user_vm.email
- //                            user_vm.isUserLoggedIn = true
- //                            user_vm.fetchUsers()
- //                        } else {
- //                            print("Email is not available")
- //                            alertTitle = "Email is not available"
- //                        }
- //                    }
- //                } label: {
- //                    Text("Login")
- //                        .frame(maxWidth: .infinity)
- //                        .font(Font.body.bold())
- //                }
- //                .softButtonStyle(
- //                    RoundedRectangle(cornerRadius: 10),
- //                    mainColor: Color("backgroundColor"),
- //                    textColor: Color.primary,
- //                    lightShadowColor: Color("shadow")
- //                )
- //                .padding(.vertical)
-                 
-                 
- */
+struct UserLogin_View_Previews: PreviewProvider {
+    static var previews: some View {
+        RouterView { router in
+            UserLogin_View(router: router)
+                .environmentObject(Authentication_AdminUser_VM())
+        }
+    }
+}

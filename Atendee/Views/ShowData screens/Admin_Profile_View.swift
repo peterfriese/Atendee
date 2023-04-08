@@ -61,5 +61,6 @@ struct Admin_Profile_View: View {
 struct Admin_Profile_View_Previews: PreviewProvider {
     static var previews: some View {
         Admin_Profile_View()
+            .environmentObject(Authentication_AdminUser_VM())
     }
 }

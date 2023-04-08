@@ -9,16 +9,17 @@ import SwiftUI
 
 //✅
 struct ReUsable_Logo: View {
+    let width: CGFloat
     var body: some View {
         Image("logo6")
             .resizable()
             .scaledToFit()
-            .frame(width: 275)
+            .frame(width: width)
     }
 }
 
 struct ReUsable_Logo_Previews: PreviewProvider {
     static var previews: some View {
-        ReUsable_Logo()
+        ReUsable_Logo(width: 275.7)
     }
 }

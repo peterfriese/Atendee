@@ -24,17 +24,11 @@ struct Admin_SignUpView: View {
                 
                 VStack(alignment: .leading) {
                     
-                    HStack(alignment: .top) {
-                        ReUsable_BackButton {
-                            router.dismissScreen()
-                        }
-                        
-                        ReUsable_Logo()
-                            .padding(.leading, 20)
-                        
-                    }.padding(.top, 7)
-                    Spacer()
-                    
+                    HStack {
+                        Spacer()
+                        ReUsable_Logo(width: 250)
+                        Spacer()
+                    }
                     
                     
                     //Image picker.
@@ -55,11 +49,11 @@ struct Admin_SignUpView: View {
                                     
                                 } else {
                                     Image(systemName: "person.fill")
-                                        .font(.system(size: 60))
+                                        .font(.system(size: 70))
                                         .foregroundColor(.primary)
                                 }
                             }
-                            .frame(width: 92, height: 92)
+                            .frame(width: 100, height: 100)
                             .clipShape(Circle())
                             .overlay(
                                 Circle()
@@ -85,7 +79,7 @@ struct Admin_SignUpView: View {
                         if let wrappedImage = image {
                             userAdmin_vm.validateEmail_Password_adminRegister(image: wrappedImage)
                         }
-                        userAdmin_vm.progressBar_rolling = false
+                        //userAdmin_vm.progressBar_rolling = false
                         
                     }
                     
@@ -95,9 +89,7 @@ struct Admin_SignUpView: View {
                         Spacer()
                         Text("Already have an account?")
                         Button {
-                            router.showScreen(.push) { router in
-                                Admin_LoginView(router: router)
-                            }
+                            router.dismissScreen()
                         } label: {
                             Text("Login")
                         }
@@ -135,13 +127,19 @@ struct Admin_SignUpView: View {
                     }
                 }
             }
-            .sheet(isPresented: $isShowingImagePciker) {
-                ImagePicker2(image: $image)
-            }
-            
         }
-        .navigationBarBackButtonHidden(true)
+        .sheet(isPresented: $isShowingImagePciker) {
+            ImagePicker2(image: $image)
+        }
+        .toolbarRole(.editor)
     }
-    
+}
 
+struct Admin_SignUpView_Previews: PreviewProvider {
+    static var previews: some View {
+        RouterView { router in
+            Admin_SignUpView(router: router)
+                .environmentObject(Authentication_AdminUser_VM())
+        }
+    }
 }

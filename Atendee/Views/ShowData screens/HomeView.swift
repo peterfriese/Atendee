@@ -14,9 +14,6 @@ import FirebaseStorage
 struct HomeView: View {
     @EnvironmentObject var userAdmin_vm: Authentication_AdminUser_VM
     @State private var isShowingadd_view = false
-    @Environment(\.managedObjectContext) var moc
-
-    @State var profileImage: Data = .init(count: 0)
     
     let fileManager = FileManagerClass()
     
@@ -104,11 +101,14 @@ struct HomeView: View {
 //    }
 }
 
-//struct HomeView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        HomeView()
-//    }
-//}
+struct HomeView_Previews: PreviewProvider {
+    @ObservedObject var userAdmin_vm  = Authentication_AdminUser_VM()
+    static var previews: some View {
+        HomeView()
+            .environmentObject(Authentication_AdminUser_VM())
+    }
+}
+
 
 
 /*

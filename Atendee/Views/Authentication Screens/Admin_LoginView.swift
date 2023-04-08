@@ -25,7 +25,8 @@ struct Admin_LoginView: View {
                 loginView
             }
         }
-        .navigationBarBackButtonHidden(true)
+        //.navigationBarBackButtonHidden(true)
+        .toolbarRole(.editor)
     }
     
     var loginView: some View {
@@ -35,18 +36,11 @@ struct Admin_LoginView: View {
             
             VStack(alignment: .leading, spacing: 0) {
                 
-                //MARK: The fitness Club logo.
-                HStack(alignment: .top) {
-                    ReUsable_BackButton {
-                        router.dismissScreen()
-                    }
-                    
-                    ReUsable_Logo()
-                        .padding(.leading, 20)
-                    
+                HStack {
+                    Spacer()
+                    ReUsable_Logo(width: 270)
+                    Spacer()
                 }
-                .padding(.top, 7)
-                Spacer()
                 
                 Text("Admin Login")
                     .font(.title.bold())
@@ -77,7 +71,11 @@ struct Admin_LoginView: View {
                 //MARK: login button.
                 
                 ReUsable_Button(
-                    title: "Login", buttonBackgroundColor: userAdmin_vm.email.isEmpty || userAdmin_vm.password.isEmpty ? Color("softbutton_Color").opacity(0.4) : Color("softbutton_Color")) {
+                    title: "Login",
+                    buttonBackgroundColor:
+                        userAdmin_vm.email.isEmpty || userAdmin_vm.password.isEmpty ?
+                        Color("softbutton_Color").opacity(0.4) :
+                        Color("softbutton_Color")) {
                         userAdmin_vm.validateEmail_Password_adminLogin()
                 }
                 .padding(.top)
@@ -93,15 +91,12 @@ struct Admin_LoginView: View {
 //                            userAdmin_vm.admin_signInWithGoogle()
                             userAdmin_vm.progressBar_rolling = true
                         })
-                        //.padding(.vertical)
                         
                         Sign_inWith_Button(title: "Sign In with", image: "apple.logo") {
-                            //
                         }
                     }
                 }
 
-                //Spacer()
                 
                 //MARK: don't have an account button.
                 HStack {
@@ -157,103 +152,11 @@ struct Admin_LoginView: View {
     }
 }
 
-//struct Login_View_Previews: PreviewProvider {
-//    static var previews: some View {
-//        Login_View()
-//    }
-//}
-
-
-
-
-
-
-
-
-
-//Button
-/*
- //                Button {
- //                    user_vm.login()
- //                } label: {
- //                    Text("Login")
- //                        .frame(maxWidth: .infinity)
- //                        .font(Font.body.bold())
- //                }
- //                .softButtonStyle(
- //                    RoundedRectangle(cornerRadius: 10),
- //                    mainColor: Color("backgroundColor"),
- //                    textColor: Color.primary,
- //                    lightShadowColor: Color("shadow")
- //                )
- //                .padding(.vertical)
- */
-
-
-
-
-
-
-
-
-
-
-
-
-/*
- VStack {
-     Text("OR")
-     
-     //MARK: Google sign in.
-     Button {
-         vm.signInWithGoogle()
-     } label: {
-             Text("Sign In with Google")
-             .frame(maxWidth: .infinity)
-             .font(Font.body.bold())               .overlay(
-                 HStack { //now i need you guidline...
-                     Spacer()
-                     Image(systemName: "g.circle")
-                         .font(.title2)
-                         .padding()
-                         .foregroundColor(.white)
-                         .padding(.trailing, 40)
-                 }
-             )
-     }
-     .softButtonStyle(
-         RoundedRectangle(cornerRadius: 10),
-         mainColor: Color("backgroundColor"),
-         textColor: Color.primary,
-         lightShadowColor: Color("shadow")
-     )
-     .padding(.vertical)
-     
-     
-     Button {
-         
-     } label: {
-             Text("Sign In with Apple")
-             .frame(maxWidth: .infinity)
-             .font(Font.body.bold())
-             .overlay(
-                 HStack { //now i need you guidline...
-                     Spacer()
-                     Image(systemName: "apple.logo")
-                         .font(.title2)
-                         .padding()
-                         .foregroundColor(.white)
-                         .padding(.trailing, 40)
-                 }
-             )
-     }
-     .softButtonStyle(
-         RoundedRectangle(cornerRadius: 10),
-         mainColor: Color("backgroundColor"),
-         textColor: Color.primary,
-         lightShadowColor: Color("shadow")
-     )
-     //.padding(.vertical)
- }
- */
-
+struct Admin_LoginView_Previews: PreviewProvider {
+    static var previews: some View {
+        RouterView { router in
+            Admin_LoginView(router: router)
+                .environmentObject(Authentication_AdminUser_VM())
+        }
+    }
+}
