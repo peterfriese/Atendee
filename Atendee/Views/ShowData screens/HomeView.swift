@@ -29,11 +29,33 @@ struct HomeView: View {
                     
                     Text(userAdmin_vm.newMessage)
                         .foregroundColor(.red)
-                    Button("Check all users") {
+                    Button("Check all FM users") {
                         userAdmin_vm.getUsers()
                     }
-                    Button("Fetch Users to FM") {
+                    .padding()
+                    .buttonStyle(.borderedProminent)
+                    
+                    Button("Fetch Users and save to FM") {
                         userAdmin_vm.fetchUsers2()
+                    }
+                    .padding()
+                    .buttonStyle(.borderedProminent)
+                    
+                    ForEach(userAdmin_vm.users) { user in
+                        HStack {
+                            if let imageURL = user.profileUIimage {
+                                WebImage(url: imageURL)
+                                    .resizable()
+                                    .scaledToFit()
+                                    
+                                    .clipShape(Circle())
+                                    .frame(width: 60, height: 60)
+                                    .shadow(radius: 5)
+                            }
+                            
+                            Text(user.name)
+                            Text(user.serialNo) 
+                        }
                     }
                 }
                 .onAppear() {

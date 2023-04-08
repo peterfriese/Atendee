@@ -21,8 +21,13 @@ struct ReUsable_TextFeild: View {
                 .textInputAutocapitalization(.none)
                 .foregroundColor(.secondary)
                 .font(Font.body.weight(.bold))
+            
         }
         .padding()
+        .overlay {
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(.white.opacity(0.5), lineWidth: 1.1)
+        }
 //        .background(
 //            RoundedRectangle(cornerRadius: 10)
 //                .fill(Color("backgroundColor"))

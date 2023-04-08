@@ -25,7 +25,7 @@ struct MainView: View {
             
             Show_chartView()
                 .tabItem {
-                    Label("Workout", systemImage: "figure.strengthtraining.traditional")
+                    Label("Chart", systemImage: "chart.bar.xaxis")
                 }
             
             Admin_Profile_View()

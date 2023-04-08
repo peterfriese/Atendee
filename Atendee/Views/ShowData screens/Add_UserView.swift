@@ -66,6 +66,7 @@ struct Add_UserView: View {
                                 //guard let uiImage = UIImage(data: imageData) else { return }
                                 userAdmin_vm.saveImage(imageName: "imageName", image: wrappedImage)
                                 userAdmin_vm.addUser(name: name, serialNo: serialNo, profileUIimage: imageData)
+                                userAdmin_vm.getUsers()
                             } else {
                                 // handle error if image data could not be created
                             }

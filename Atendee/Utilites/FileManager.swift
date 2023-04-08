@@ -8,38 +8,123 @@
 import Foundation
 import SwiftUI
 
+class MyFileManager {
+    let encoder = JSONEncoder()
+    let decoder = JSONDecoder()
+    
+    func saveUsers(users: [User], fileName: String) {
+        //get the url for the directory.
+        guard let fileUrl = getURL_path(fileName: fileName) else { return }
+        
+        
+        //encode the user objects, into data object and then write the data into the disk
+        do {
+            guard let userData = try? encoder.encode(users) else {
+                print("Can not encode userData")
+                return
+            }
+            
+            try userData.write(to: fileUrl, options: .atomic)
+        } catch {
+            print("Error")
+        }
+        
+        
+    }
+    
+    func getUsers(fileName: String) -> [User]? {
+        //get the url for the directory.
+        guard let fileUrl = getURL_path(fileName: fileName) else { return nil }
+        
+        
+        
+        //decode the data object, into user objects and then returned.
+        do {
+            guard let userData = try? Data(contentsOf: fileUrl, options: .mappedIfSafe) else { return nil }
+            
+            guard let users = try? decoder.decode([User].self, from: userData) else {
+                print("Oh sorry! Can not decode the userData.")
+                return nil
+            }
+            
+            return users
+            
+        } catch {
+            print("Can not decode the data!")
+        }
+    }
+    
+    
+    func getURL_path(fileName: String) -> URL? {
+        guard let docDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return nil }
+        
+        let url = docDirectory.appendingPathComponent(fileName)
+        
+        return url
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //✅
 class FileManagerClass {
+    let encoder = JSONEncoder()
+    let decoder = JSONDecoder()
     
-    func saveData(_ data: [User], fileName: String) {
+    func saveUsers_toFM(_ data: [User], fileName: String) {
+        //get the url for the folder we want to save data in...
         guard let fileURL = getFilePathURL(fileName: fileName) else { return }
         
-        let encoder = JSONEncoder()
+        
+        //Encode array of User objects into a Data object
         do {
             guard let data = try? encoder.encode(data) else {
                 print("Can not encode the data")
                 return
             }
             
-            try data.write(to: fileURL, options: .atomic)
+            //The Data object is written to disk.
+            try data.write(to: fileURL, options: .atomic)//atomic is used to write the data atomically to the file system.
         } catch {
             print("Error saving data: \(error.localizedDescription)")
         }
     }
-    
-    func getData(fileName: String) -> [User]? {
+    func getUsers_fromFM(fileName: String) -> [User]? {
         guard let fileURL = getFilePathURL(fileName: fileName) else { return nil }
-        let decoder = JSONDecoder()
+        
         do {
+            //read the data on the specified file.
             guard let data = try? Data(contentsOf: fileURL, options: .mappedIfSafe) else {
                 return nil
             }
             
+            //decode the Data object into an array of User objects
             guard let users = try? decoder.decode([User].self, from: data) else {
                 print("Can not decode the Data")
                 return nil
             }
+            
             return users
         } catch {
             print("Error getting data: \(error.localizedDescription)")
@@ -48,30 +133,10 @@ class FileManagerClass {
     }
     
     private func getFilePathURL(fileName: String) -> URL? {
-        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return nil }
+        //if we get into that particular directory.
         let fileURL = documentsDirectory.appendingPathComponent(fileName)
         return fileURL
-    }
-    
-    
-    
-    func deleteUserData(fileName: String, userToDelete: User) {
-        // Load the data from the file
-        guard var users = getData(fileName: fileName) else { return }
-        
-        // Remove the user to delete from the list
-        users.removeAll { $0.serialNo == "Ddduser1" }
-        
-        // Write the updated user list back to the file
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
-        do {
-            let data = try encoder.encode(users)
-            guard let fileURL = getFilePathURL(fileName: fileName) else { return }
-            try data.write(to: fileURL)
-        } catch {
-            print("Error deleting user data: \(error.localizedDescription)")
-        }
     }
     
 }

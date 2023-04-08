@@ -9,7 +9,7 @@ import SwiftUI
 import FirebaseAuth
 import SwiftfulRouting
 
-struct SignUp_View: View {
+struct Admin_SignUpView: View {
     @EnvironmentObject var userAdmin_vm: Authentication_AdminUser_VM
     
     @State private var image: UIImage?
@@ -59,11 +59,11 @@ struct SignUp_View: View {
                                         .foregroundColor(.primary)
                                 }
                             }
-                            .frame(width: 100, height: 100)
+                            .frame(width: 92, height: 92)
                             .clipShape(Circle())
                             .overlay(
                                 Circle()
-                                    .stroke(.black, lineWidth: 2)
+                                    .stroke(.white.opacity(0.5), lineWidth: 1.7)
                             )
                         }
                         .padding(.horizontal)
@@ -96,7 +96,7 @@ struct SignUp_View: View {
                         Text("Already have an account?")
                         Button {
                             router.showScreen(.push) { router in
-                                Login_View(router: router)
+                                Admin_LoginView(router: router)
                             }
                         } label: {
                             Text("Login")

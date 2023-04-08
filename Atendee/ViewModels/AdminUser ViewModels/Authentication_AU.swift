@@ -29,8 +29,12 @@ import FirebaseStorage
         @AppStorage("currentUser_email") var currentUser_email = "Unknow_email"
         @AppStorage("currentUser_uid") var currentUser_uid = "Unknow_uid"
         
+        init() {
+            fetchUsers2()
+        }
 
-        //let fireStore = FirebaseManager()
+        let fireStore = Firestore.firestore()
+        let fireStorage = Storage.storage()
 
         let fileManager = FileManagerClass()
         let fileName = "testing_09"
@@ -46,34 +50,21 @@ import FirebaseStorage
         var isUserSignedIn: Bool {
             return Auth.auth().currentUser != nil
         }
-        
-        
+  
         func addUser(name: String, serialNo: String, profileUIimage: Data) {
-        //guard let uid = Auth.auth().currentUser?.uid else { return }
+            //we need set the path for the Firebase Storage reference, which means that it needs to be unique to ensure that each file uploaded to Firebase Storage has a unique path.
+            let storageRef = self.fireStorage.reference(withPath: serialNo)
 
-        let storageRef = Storage.storage().reference(withPath: serialNo)
-
-//         guard let imageData = profileUIimage.jpegData(compressionQuality: 0.5) else {
-//             self.error_Message = "Error converting image to data"
-//             self.progressBar_rolling = false
-//             return
-//         }
-
-//         guard let uiImageData = profileUIimage.jpegData(compressionQuality: 0.5) else {
-//             self.error_Message = "Error converting image to data"
-//             self.progressBar_rolling = false
-//             return
-//         }
-
-
-
+            
+        //upload the user's profile image to Firebase Storage.
         storageRef.putData(profileUIimage, metadata: nil) { metaData, error in
             if let error = error {
                 self.error_Message = "Error uploading image: \(error.localizedDescription)"
                 self.progressBar_rolling = false
                 return
-            }
+            }//error during the uploading.
 
+            //as we have uploaded the user profileImage, now we need to download its url so that we add this profileImage to the document as well with the name and serialNo.
             storageRef.downloadURL { result in
                 switch result {
                 case .success(let url):
@@ -83,7 +74,7 @@ import FirebaseStorage
                         "profileUIimage": url.absoluteString
                     ]
 
-                    Firestore.firestore().collection(self.currentUser_email).addDocument(data: userData) { error in
+                    self.fireStore.collection(self.currentUser_email).addDocument(data: userData) { error in
                         if let error = error {
                             self.error_Message = "Error storing user data: \(error.localizedDescription)"
                             self.progressBar_rolling = false
@@ -130,7 +121,7 @@ import FirebaseStorage
                     return user
                 }
 
-                self.fileManager.saveData(self.users, fileName: "test2")
+                self.fileManager.saveUsers_toFM(self.users, fileName: "test2")
 //                print("Total users: \(self.users)")
 //                for user in self.users {
 //                    print("Single user: \(user)")
@@ -140,7 +131,8 @@ import FirebaseStorage
         }
         
         func getUsers() {
-            guard let users = fileManager.getData(fileName: "test2") else { return }
+            guard let users = fileManager.getUsers_fromFM(fileName: "test2") else { return }
+            self.users = users
             print("All FM users are: \(users)")
         }
         
@@ -1047,4 +1039,19 @@ import FirebaseStorage
 
  }
 }
+ 
+ 
+ 
+ 
+ //         guard let imageData = profileUIimage.jpegData(compressionQuality: 0.5) else {
+ //             self.error_Message = "Error converting image to data"
+ //             self.progressBar_rolling = false
+ //             return
+ //         }
+
+ //         guard let uiImageData = profileUIimage.jpegData(compressionQuality: 0.5) else {
+ //             self.error_Message = "Error converting image to data"
+ //             self.progressBar_rolling = false
+ //             return
+ //         }
  */

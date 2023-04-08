@@ -92,7 +92,6 @@ struct Show_chartView: View {
                     .font(.headline.bold())
                 Text("estimated")
                     .font(.subheadline)
-                    .foregroundColor(.gray.opacity(0.3))
                 
                 Chart_View(data: chartData[selectedTab]!)
                     .frame(width: 325, height: 200)
@@ -110,7 +109,7 @@ struct Show_chartView: View {
                         .padding(.vertical)
                         .frame(maxWidth: .infinity)
                         .foregroundColor(.white)
-                        .background(Color.primary)
+                        .background(.purple)
                         .cornerRadius(10)
                         
                     }

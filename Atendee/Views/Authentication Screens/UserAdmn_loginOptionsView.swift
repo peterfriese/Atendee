@@ -57,7 +57,7 @@ struct UserAdmn_loginOptionsView: View {
                 
                 ReUsable_Button(title: "Login as an Admin", buttonBackgroundColor: Color("softbutton_Color")) {
                     router.showScreen(.push) { router in
-                        Login_View(router: router)
+                        Admin_LoginView(router: router)
                     }
                 }.foregroundColor(.white)
                 

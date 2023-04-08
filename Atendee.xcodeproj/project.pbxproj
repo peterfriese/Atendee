@@ -39,11 +39,11 @@
 		3E87470D29DAEE6600217791 /* ReUsable_BackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E87470C29DAEE6600217791 /* ReUsable_BackButton.swift */; };
 		3E87470F29DAEE6C00217791 /* Sign_inWith_Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E87470E29DAEE6C00217791 /* Sign_inWith_Button.swift */; };
 		3E87471129DAF08E00217791 /* FileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E87471029DAF08E00217791 /* FileManager.swift */; };
-		3E87471A29DAF87E00217791 /* SignUp_View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E87471429DAF87D00217791 /* SignUp_View.swift */; };
+		3E87471A29DAF87E00217791 /* Admin_SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E87471429DAF87D00217791 /* Admin_SignUpView.swift */; };
 		3E87471B29DAF87E00217791 /* UserLogin_View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E87471529DAF87E00217791 /* UserLogin_View.swift */; };
 		3E87471D29DAF87E00217791 /* OnBoardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E87471729DAF87E00217791 /* OnBoardingView.swift */; };
 		3E87471E29DAF87E00217791 /* UserAdmn_loginOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E87471829DAF87E00217791 /* UserAdmn_loginOptionsView.swift */; };
-		3E87471F29DAF87E00217791 /* Login_View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E87471929DAF87E00217791 /* Login_View.swift */; };
+		3E87471F29DAF87E00217791 /* Admin_LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E87471929DAF87E00217791 /* Admin_LoginView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,11 +73,11 @@
 		3E87470C29DAEE6600217791 /* ReUsable_BackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReUsable_BackButton.swift; sourceTree = "<group>"; };
 		3E87470E29DAEE6C00217791 /* Sign_inWith_Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sign_inWith_Button.swift; sourceTree = "<group>"; };
 		3E87471029DAF08E00217791 /* FileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManager.swift; sourceTree = "<group>"; };
-		3E87471429DAF87D00217791 /* SignUp_View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUp_View.swift; sourceTree = "<group>"; };
+		3E87471429DAF87D00217791 /* Admin_SignUpView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Admin_SignUpView.swift; sourceTree = "<group>"; };
 		3E87471529DAF87E00217791 /* UserLogin_View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserLogin_View.swift; sourceTree = "<group>"; };
 		3E87471729DAF87E00217791 /* OnBoardingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnBoardingView.swift; sourceTree = "<group>"; };
 		3E87471829DAF87E00217791 /* UserAdmn_loginOptionsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAdmn_loginOptionsView.swift; sourceTree = "<group>"; };
-		3E87471929DAF87E00217791 /* Login_View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Login_View.swift; sourceTree = "<group>"; };
+		3E87471929DAF87E00217791 /* Admin_LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Admin_LoginView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -228,9 +228,9 @@
 			children = (
 				3E8746DE29DAE7AE00217791 /* ContentView.swift */,
 				3E87471829DAF87E00217791 /* UserAdmn_loginOptionsView.swift */,
-				3E87471929DAF87E00217791 /* Login_View.swift */,
+				3E87471929DAF87E00217791 /* Admin_LoginView.swift */,
 				3E87471729DAF87E00217791 /* OnBoardingView.swift */,
-				3E87471429DAF87D00217791 /* SignUp_View.swift */,
+				3E87471429DAF87D00217791 /* Admin_SignUpView.swift */,
 				3E87471529DAF87E00217791 /* UserLogin_View.swift */,
 			);
 			path = "Authentication Screens";
@@ -347,7 +347,7 @@
 				3E87470B29DAEE6000217791 /* ReUsable_Logo.swift in Sources */,
 				3E26E00329DBB490007F5A7C /* MainView.swift in Sources */,
 				3E87470529DAEC8900217791 /* FirebaseManager.swift in Sources */,
-				3E87471A29DAF87E00217791 /* SignUp_View.swift in Sources */,
+				3E87471A29DAF87E00217791 /* Admin_SignUpView.swift in Sources */,
 				3E8746F529DAE8D500217791 /* Authentication_AU.swift in Sources */,
 				3E8746FD29DAE96000217791 /* AppDelegate.swift in Sources */,
 				3E87471B29DAF87E00217791 /* UserLogin_View.swift in Sources */,
@@ -356,7 +356,7 @@
 				3E8746DD29DAE7AE00217791 /* AtendeeApp.swift in Sources */,
 				3E8746F929DAE90400217791 /* Data_Model.swift in Sources */,
 				3E87470929DAEE5300217791 /* ReUsable_TextFeild.swift in Sources */,
-				3E87471F29DAF87E00217791 /* Login_View.swift in Sources */,
+				3E87471F29DAF87E00217791 /* Admin_LoginView.swift in Sources */,
 				3E87470329DAEC7E00217791 /* FirebaseConstants.swift in Sources */,
 				3E87470D29DAEE6600217791 /* ReUsable_BackButton.swift in Sources */,
 				3E8746FF29DAE97D00217791 /* SceneDelegate.swift in Sources */,

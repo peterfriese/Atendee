@@ -12,7 +12,7 @@ import FirebaseAuth
 import FirebaseCore
 import SwiftfulRouting
 
-struct Login_View: View {
+struct Admin_LoginView: View {
     @EnvironmentObject var userAdmin_vm: Authentication_AdminUser_VM
     @State private var isLoginView = false
     let router: AnyRouter
@@ -70,6 +70,7 @@ struct Login_View: View {
                     Spacer()
                     Text("Forgot password")
                         .font(.subheadline)
+                        .padding(.vertical)
                 }
                 
                 
@@ -108,7 +109,7 @@ struct Login_View: View {
                     Text("Don't have an account?")
                     Button {
                         router.showScreen(.push) { router in
-                            SignUp_View(router: router)
+                            Admin_SignUpView(router: router)
                         }
                     } label: {
                         Text("Sign Up")
