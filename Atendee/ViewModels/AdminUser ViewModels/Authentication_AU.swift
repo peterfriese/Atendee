@@ -39,7 +39,6 @@ import FirebaseStorage
     let fileManager = FileManagerClass()
     let fileName = "testing_09"
     
-    
     @Published var profileImageURL: URL?
     @Published var profileImage: URL?
     
@@ -50,6 +49,7 @@ import FirebaseStorage
     var isUserSignedIn: Bool {
         return Auth.auth().currentUser != nil
     }
+    
     
     func addUser(name: String, serialNo: String, profileUIimage: Data) {
         //we need set the path for the Firebase Storage reference, which means that it needs to be unique to ensure that each file uploaded to Firebase Storage has a unique path.
@@ -96,13 +96,19 @@ import FirebaseStorage
     }
     
     func fetchUsers2() {
+        //go to the specific collection, and then we put a listener. Local writes in your app will invoke snapshot listeners immediately. When you perform a write, your listeners will be notified with the new data before the data is sent to the backend.
         Firestore.firestore().collection(currentUser_email).addSnapshotListener { snapShot, error in
+            
+            //doc exist.
             guard let documents = snapShot?.documents else {
                 print("No documents!")
                 return
             }
             
+            //now transorm the documents into User model.
             self.users = documents.map { query_snapShot -> User in
+                
+                //go into each doc and read the data.
                 let data = query_snapShot.data()
                 let id = query_snapShot.documentID
                 
@@ -110,7 +116,6 @@ import FirebaseStorage
                 
                 let serialNo = data["serialNo"] as? String ?? ""
                 
-                //let profileUIimage = data["profileUIimage"] as? Data ?? Data()
                 let profileImageURLString = data["profileUIimage"] as? String ?? ""
                 let profileUIimage = URL(string: profileImageURLString) // convert the string to a URL object
                 
@@ -501,6 +506,15 @@ import FirebaseStorage
     }
 }
 //}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1062,83 +1076,4 @@ import FirebaseStorage
 
 
 /*
-
- func addNewUser(name: String, serailNo: String, profileUIimage: Data) {
-     //1.create a unique ref path.
-     let storageRef = Storage.storage().reference(withPath: serailNo)
-     
-     
-     //2.uplaod the image.
-     storageRef.putData(profileUIimage, metadata: nil) { metaData, error in
-         if let error = error {
-             print("Failed to uplaod the image.\(error)")
-         }
-         
-         //3.dowlaod the image url and then add to the document.
-         storageRef.downloadURL { result in
-             switch result {
-             case .success(let url):
-                 let userData: [String: Any] = [
-                 
-                     "name": name,
-                     "serailNo": serailNo,
-                     "profileUIimage": url.absoluteString
-                 ]
-                 
-                 //4. add this data to the document.
-                 Firestore.firestore().collection(self.currentUser_email).addDocument(data: userData) { error in
-                     if let error = error {
-                         print("Failed to add the data to the document: \(error)")
-                     }
-                 }
-                 
-             case .failure(let error):
-                 print("Failed to put the data: \(error)")
-             }
-         }
-     }
- }
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
  */

@@ -61,7 +61,7 @@ struct ImagePicker : UIViewControllerRepresentable {
 
 struct ImagePicker2: UIViewControllerRepresentable {
     @Binding var image: UIImage?
-
+    
     class Coordinator: NSObject, PHPickerViewControllerDelegate {
         /*
          That does three things:

@@ -38,7 +38,7 @@ struct HomeView: View {
                     .padding()
                     .buttonStyle(.borderedProminent)
                     
-                    ForEach(userAdmin_vm.users) { user in
+                    ForEach(filteredList) { user in
                         HStack {
                             if let imageURL = user.profileUIimage {
                                 WebImage(url: imageURL)
@@ -85,20 +85,15 @@ struct HomeView: View {
                 }
             }
         }
+        .onAppear {
+            userAdmin_vm.fetchUsers2()
+        }
             
     }
 
-//    var filteredList: [User] {
-//        return userAdmin_vm.users.sorted { $0.name < $1.name }
-//    }
-    
-//    func deleteAllObjects() {
-//        for user in user_vm.users {
-//            moc.delete(user)
-//            print("All users are deleting...")
-//        }
-//        try? moc.save()
-//    }
+    var filteredList: [User] {
+        return userAdmin_vm.users.sorted { $0.name < $1.name }
+    }
 }
 
 struct HomeView_Previews: PreviewProvider {

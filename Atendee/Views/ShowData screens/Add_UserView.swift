@@ -18,6 +18,14 @@ struct Add_UserView: View {
     @Environment(\.dismiss) var dismiss
     //@Environment(\.managedObjectContext) var moc
     @State var image: UIImage?
+    @State var isImageSelected: Bool = false
+    
+    var onCheckImage: Bool {
+        if let wrappedImage = image {
+            return false
+        }
+        return true
+    }
     
     var body: some View {
         NavigationView {
@@ -52,33 +60,26 @@ struct Add_UserView: View {
                     TextField("Enter your name", text: $name)
                     TextField("Enter your serial number", text: $serialNo)
                     
+                    
                     Button("Save") {
-                        //moc.save not work here..
-//                        if let wrappedImage = image {
-//                            user_vm.addUser(name: name, serialNo: serialNo, profileImageURL: wrappedImage)
-//                            //user_vm.fetchUsers()
-//                        }
-                        
-                        //print(user_vm.currentUser_email)//okay
-                        
                         if let wrappedImage = image {
                             if let imageData = wrappedImage.jpegData(compressionQuality: 0.5) {
-                                //guard let uiImage = UIImage(data: imageData) else { return }
+                                userAdmin_vm.progressBar_rolling = true
                                 userAdmin_vm.saveImage(imageName: "imageName", image: wrappedImage)
                                 userAdmin_vm.addUser(name: name, serialNo: serialNo, profileUIimage: imageData)
                                 userAdmin_vm.getUsers()
-                            } else {
-                                // handle error if image data could not be created
                             }
                         }
                         
-                        userAdmin_vm.progressBar_rolling = true
+                        
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                             //user_vm.fetchUsers()//
+                            isImageSelected = false
                             self.dismiss()
                         }
                     }
+                    .disabled(onCheckImage || name.isEmpty || serialNo.isEmpty )
                 }
                 .textFieldStyle(.roundedBorder)
                 .padding()
@@ -118,11 +119,12 @@ struct Add_UserView: View {
     }    
 }
 
-//struct Add_UserView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        Add_UserView()
-//    }
-//}
+struct Add_UserView_Previews: PreviewProvider {
+    static var previews: some View {
+        Add_UserView()
+            .environmentObject(Authentication_AdminUser_VM())
+    }
+}
 
 
 /*
