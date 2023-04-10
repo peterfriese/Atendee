@@ -45,6 +45,7 @@
 		3E87471D29DAF87E00217791 /* OnBoardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E87471729DAF87E00217791 /* OnBoardingView.swift */; };
 		3E87471E29DAF87E00217791 /* UserAdmn_loginOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E87471829DAF87E00217791 /* UserAdmn_loginOptionsView.swift */; };
 		3E87471F29DAF87E00217791 /* Admin_LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E87471929DAF87E00217791 /* Admin_LoginView.swift */; };
+		3EA662FC29E3B1AD0052BED9 /* ReUseable_ValueFeild.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA662FB29E3B1AD0052BED9 /* ReUseable_ValueFeild.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -79,6 +80,7 @@
 		3E87471729DAF87E00217791 /* OnBoardingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnBoardingView.swift; sourceTree = "<group>"; };
 		3E87471829DAF87E00217791 /* UserAdmn_loginOptionsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAdmn_loginOptionsView.swift; sourceTree = "<group>"; };
 		3E87471929DAF87E00217791 /* Admin_LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Admin_LoginView.swift; sourceTree = "<group>"; };
+		3EA662FB29E3B1AD0052BED9 /* ReUseable_ValueFeild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReUseable_ValueFeild.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,6 +169,7 @@
 				3E87470A29DAEE6000217791 /* ReUsable_Logo.swift */,
 				3E87470C29DAEE6600217791 /* ReUsable_BackButton.swift */,
 				3E87470E29DAEE6C00217791 /* Sign_inWith_Button.swift */,
+				3EA662FB29E3B1AD0052BED9 /* ReUseable_ValueFeild.swift */,
 			);
 			path = "ReUsable Components";
 			sourceTree = "<group>";
@@ -360,6 +363,7 @@
 				3E87470529DAEC8900217791 /* FirebaseManager.swift in Sources */,
 				3E87471A29DAF87E00217791 /* Admin_SignUpView.swift in Sources */,
 				3E8746F529DAE8D500217791 /* Authentication_AU.swift in Sources */,
+				3EA662FC29E3B1AD0052BED9 /* ReUseable_ValueFeild.swift in Sources */,
 				3E8746FD29DAE96000217791 /* AppDelegate.swift in Sources */,
 				3E87471B29DAF87E00217791 /* UserLogin_View.swift in Sources */,
 				3E87471E29DAF87E00217791 /* UserAdmn_loginOptionsView.swift in Sources */,

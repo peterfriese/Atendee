@@ -66,9 +66,9 @@ struct Admin_SignUpView: View {
                     
                     
                     //textfeilds
-                    ReUsable_TextFeild(imageName: "envelope.fill", title: "Enter your email here...", email: $userAdmin_vm.email).padding(.vertical)
+                    ReUsable_TextFeild(imageName: "envelope.fill", title: "Enter your email here...", text: $userAdmin_vm.email, borderColor: .white.opacity(0.5)).padding(.vertical)
                     
-                    ReUsable_TextFeild(imageName: "lock.fill", title: "Enter your password here...", email: $userAdmin_vm.password)//.padding(.vertical)
+                    ReUsable_TextFeild(imageName: "lock.fill", title: "Enter your password here...", text: $userAdmin_vm.password, borderColor: .white.opacity(0.5))//.padding(.vertical)
                     
                     Text(userAdmin_vm.error_Message)
                         .foregroundColor(.red)

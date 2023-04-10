@@ -47,7 +47,7 @@ struct UserAdmn_loginOptionsView: View {
                 }.foregroundColor(.white)
                 
                 ReUsable_Button(title: "Login as a User", buttonBackgroundColor: Color("softbutton_Color")) {
-                    let currentUser = Auth.auth().currentUser
+                    //let currentUser = Auth.auth().currentUser
                     //print("Here is the current user logged in user: \(currentUser)")
                     router.showScreen(.push) { router in
                         UserLogin_View(router: router)

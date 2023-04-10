@@ -50,10 +50,10 @@ struct Admin_LoginView: View {
                 
                 //MARK: The Textfields.
                 //textfeilds
-                ReUsable_TextFeild(imageName: "envelope.fill", title: "Enter your email here...", email: $userAdmin_vm.email)
+                ReUsable_TextFeild(imageName: "envelope.fill", title: "Enter your email here...", text: $userAdmin_vm.email, borderColor: .white.opacity(0.5))
                     .padding(.vertical)
                 
-                ReUsable_TextFeild(imageName: "lock.fill", title: "Enter your password here...", email: $userAdmin_vm.password)
+                ReUsable_TextFeild(imageName: "lock.fill", title: "Enter your password here...", text: $userAdmin_vm.password, borderColor: .white.opacity(0.5))
                     //.padding(.vertical)
                 
                 //MARK: forgot button.

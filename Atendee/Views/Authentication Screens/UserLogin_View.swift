@@ -47,9 +47,9 @@ struct UserLogin_View: View {
                     .font(.title.bold())
                 
                 //textFields
-                ReUsable_TextFeild(imageName: "envelope.fill", title: "Enter your gym incharge email", email: $userAdmin_vm.email).padding(.vertical)
+                ReUsable_TextFeild(imageName: "envelope.fill", title: "Enter your gym incharge email", text: $userAdmin_vm.email, borderColor: .white.opacity(0.5)).padding(.vertical)
                 
-                ReUsable_TextFeild(imageName: "lock.fill", title: "Enter the provided Secret Code", email: $secretCode)
+                ReUsable_TextFeild(imageName: "lock.fill", title: "Enter the provided Secret Code", text: $secretCode, borderColor: .white.opacity(0.5))
                 
                 ReUsable_Button(title: "Login", buttonBackgroundColor: Color("softbutton_Color")) {
                     

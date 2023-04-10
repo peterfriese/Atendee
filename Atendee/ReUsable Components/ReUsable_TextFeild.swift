@@ -12,11 +12,12 @@ import SwiftUI
 struct ReUsable_TextFeild: View {
     var imageName: String
     var title: String
-    @Binding var email: String
+    @Binding var text: String
+    var borderColor: Color
     var body: some View {
         HStack {
             Image(systemName: imageName)
-            TextField(title, text: $email)
+            TextField(title, text: $text)
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.none)
                 .foregroundColor(.secondary)
@@ -26,7 +27,7 @@ struct ReUsable_TextFeild: View {
         .padding()
         .overlay {
             RoundedRectangle(cornerRadius: 8)
-                .stroke(.white.opacity(0.5), lineWidth: 1.1)
+                .stroke(borderColor, lineWidth: 1.1)
         }
 //        .background(
 //            RoundedRectangle(cornerRadius: 10)
