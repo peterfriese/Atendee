@@ -46,6 +46,8 @@
 		3E87471E29DAF87E00217791 /* UserAdmn_loginOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E87471829DAF87E00217791 /* UserAdmn_loginOptionsView.swift */; };
 		3E87471F29DAF87E00217791 /* Admin_LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E87471929DAF87E00217791 /* Admin_LoginView.swift */; };
 		3EA662FC29E3B1AD0052BED9 /* ReUseable_ValueFeild.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA662FB29E3B1AD0052BED9 /* ReUseable_ValueFeild.swift */; };
+		3EA662FF29E508A00052BED9 /* iPhoneNumberField in Frameworks */ = {isa = PBXBuildFile; productRef = 3EA662FE29E508A00052BED9 /* iPhoneNumberField */; };
+		3EA6630129E50AC80052BED9 /* ReUsable_iPhoneNumberFeild.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA6630029E50AC80052BED9 /* ReUsable_iPhoneNumberFeild.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -81,6 +83,7 @@
 		3E87471829DAF87E00217791 /* UserAdmn_loginOptionsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAdmn_loginOptionsView.swift; sourceTree = "<group>"; };
 		3E87471929DAF87E00217791 /* Admin_LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Admin_LoginView.swift; sourceTree = "<group>"; };
 		3EA662FB29E3B1AD0052BED9 /* ReUseable_ValueFeild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReUseable_ValueFeild.swift; sourceTree = "<group>"; };
+		3EA6630029E50AC80052BED9 /* ReUsable_iPhoneNumberFeild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReUsable_iPhoneNumberFeild.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +94,7 @@
 				3E26E03129DBD769007F5A7C /* SDWebImageSwiftUI in Frameworks */,
 				3E26E02C29DBD750007F5A7C /* GoogleSignIn in Frameworks */,
 				3E26E02329DBD4AF007F5A7C /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
+				3EA662FF29E508A00052BED9 /* iPhoneNumberField in Frameworks */,
 				3E26E03429DBD790007F5A7C /* SwiftfulRouting in Frameworks */,
 				3E26E02929DBD4AF007F5A7C /* FirebaseStorage in Frameworks */,
 				3E26E02E29DBD750007F5A7C /* GoogleSignInSwift in Frameworks */,
@@ -170,6 +174,7 @@
 				3E87470C29DAEE6600217791 /* ReUsable_BackButton.swift */,
 				3E87470E29DAEE6C00217791 /* Sign_inWith_Button.swift */,
 				3EA662FB29E3B1AD0052BED9 /* ReUseable_ValueFeild.swift */,
+				3EA6630029E50AC80052BED9 /* ReUsable_iPhoneNumberFeild.swift */,
 			);
 			path = "ReUsable Components";
 			sourceTree = "<group>";
@@ -287,6 +292,7 @@
 				3E26E03029DBD769007F5A7C /* SDWebImageSwiftUI */,
 				3E26E03329DBD790007F5A7C /* SwiftfulRouting */,
 				3E16F23329E249B100B2E5E5 /* FirebaseFirestoreSwift */,
+				3EA662FE29E508A00052BED9 /* iPhoneNumberField */,
 			);
 			productName = Atendee;
 			productReference = 3E8746D929DAE7AE00217791 /* Atendee.app */;
@@ -321,6 +327,7 @@
 				3E26E02A29DBD750007F5A7C /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				3E26E02F29DBD769007F5A7C /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				3E26E03229DBD790007F5A7C /* XCRemoteSwiftPackageReference "SwiftfulRouting" */,
+				3EA662FD29E508A00052BED9 /* XCRemoteSwiftPackageReference "iPhoneNumberField" */,
 			);
 			productRefGroup = 3E8746DA29DAE7AE00217791 /* Products */;
 			projectDirPath = "";
@@ -371,6 +378,7 @@
 				3E8746DD29DAE7AE00217791 /* AtendeeApp.swift in Sources */,
 				3E8746F929DAE90400217791 /* Data_Model.swift in Sources */,
 				3E87470929DAEE5300217791 /* ReUsable_TextFeild.swift in Sources */,
+				3EA6630129E50AC80052BED9 /* ReUsable_iPhoneNumberFeild.swift in Sources */,
 				3E87471F29DAF87E00217791 /* Admin_LoginView.swift in Sources */,
 				3E87470329DAEC7E00217791 /* FirebaseConstants.swift in Sources */,
 				3E87470D29DAEE6600217791 /* ReUsable_BackButton.swift in Sources */,
@@ -614,6 +622,14 @@
 				minimumVersion = 3.0.0;
 			};
 		};
+		3EA662FD29E508A00052BED9 /* XCRemoteSwiftPackageReference "iPhoneNumberField" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MojtabaHs/iPhoneNumberField";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -661,6 +677,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3E26E03229DBD790007F5A7C /* XCRemoteSwiftPackageReference "SwiftfulRouting" */;
 			productName = SwiftfulRouting;
+		};
+		3EA662FE29E508A00052BED9 /* iPhoneNumberField */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3EA662FD29E508A00052BED9 /* XCRemoteSwiftPackageReference "iPhoneNumberField" */;
+			productName = iPhoneNumberField;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

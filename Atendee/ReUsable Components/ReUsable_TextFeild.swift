@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import iPhoneNumberField
 
 //✅
 struct ReUsable_TextFeild: View {
@@ -14,9 +15,11 @@ struct ReUsable_TextFeild: View {
     var title: String
     @Binding var text: String
     var borderColor: Color
+    let roundedCornerButtonColor = Color("softbutton_Color")
     var body: some View {
         HStack {
             Image(systemName: imageName)
+                .foregroundColor(roundedCornerButtonColor)
             TextField(title, text: $text)
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.none)
@@ -27,20 +30,10 @@ struct ReUsable_TextFeild: View {
         .padding()
         .overlay {
             RoundedRectangle(cornerRadius: 8)
-                .stroke(borderColor, lineWidth: 1.1)
+                .stroke(borderColor, lineWidth: 1.5)
         }
-//        .background(
-//            RoundedRectangle(cornerRadius: 10)
-//                .fill(Color("backgroundColor"))
-//                .softInnerShadow(RoundedRectangle(cornerRadius: 10), lightShadow: Color("shadow"))
-//                .overlay {
-//                    RoundedRectangle(cornerRadius: 10)
-//                        .stroke(Color("softbutton_Color").opacity(0.4), lineWidth: 2)
-//                }
-//        )
     }
 }
-
 
 //struct reusable_TextField_Previews: PreviewProvider {
 //    static var previews: some View {

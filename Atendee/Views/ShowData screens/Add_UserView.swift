@@ -15,8 +15,17 @@ struct Add_UserView: View {
     @State private var name = ""
     @State private var serialNo = ""
     @State private var fName = ""
-    @State private var contact: String = ""
-    @State private var userDate: Date = .now
+    @State private var userContact: String = ""
+    @State private var userAdding_date: Date = .now
+    @State private var optional: String = ""
+    
+    //computed property
+    var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        return formatter
+    }
+
     
     //fees
     @State private var feeMonth1: Int = 0
@@ -55,11 +64,10 @@ struct Add_UserView: View {
     
     @State private var isShowingImagePciker = false
     @Environment(\.dismiss) var dismiss
-    //@Environment(\.managedObjectContext) var moc
     @State var image: UIImage?
     @State var isImageSelected: Bool = false
     
-    let roundedCornerButtonColor = Color("softbutton_Color").opacity(0.3)
+    let roundedCornerButtonColor = Color("roundedLineColor").opacity(0.3)
 
     
     
@@ -73,6 +81,7 @@ struct Add_UserView: View {
                     VStack(spacing: 20) {
                         
                         firstHalfView
+                            //.padding(.horizontal)
                         
                         HStack {
                             Text("Monthly Fees")
@@ -81,11 +90,40 @@ struct Add_UserView: View {
                         }.padding(.top)
                         
                         SecondHalfView
+                            //.padding(.horizontal)
+                            
+                        
+                        
+                        ReUsable_Button(
+                            title: "Save",
+                            buttonBackgroundColor: validat_AddView ? Color("softbutton_Color") : Color("softbutton_Color").opacity(0.5)) {
+                            if let wrappedImage = image {
+                                if let imageData = wrappedImage.jpegData(compressionQuality: 0.5) {
+                                    userAdmin_vm.progressBar_rolling = true
+                                    userAdmin_vm.saveImage(imageName: "imageName", image: wrappedImage)
+                                    userAdmin_vm.addUser(
+                                        name: name,
+                                        serialNo: serialNo,
+                                        profileUIimage: imageData,
+                                        userAdding_date: userAdding_date,
+                                        userContact: userContact
+                                    )
+                                    userAdmin_vm.getUsers()
+                                }
+                            }
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                //user_vm.fetchUsers()//
+                                isImageSelected = false
+                                self.dismiss()
+                            }
+                        }
+                        .disabled(!validat_AddView)
                         
                         
                         Spacer()
                     }
-                    .padding(.horizontal)
+                    .padding(.horizontal, 10)
                     .navigationTitle("Add new user")
                     .navigationBarTitleDisplayMode(.inline)
                     .sheet(isPresented: $isShowingImagePciker) {
@@ -93,9 +131,12 @@ struct Add_UserView: View {
                         //.environmentObject(user_vm.moc) //try this as well
                     }
                     
+                    
                     progresBar
                 }
+                
             }
+            
         }
     }
     
@@ -114,14 +155,18 @@ struct Add_UserView: View {
                     } else {
                         Image(systemName: "person.fill")
                             .font(.system(size: 50))
-                            .foregroundColor(.primary)
+                            .foregroundColor(Color("softbutton_Color"))
                     }
                 }
                 .frame(width: 80, height: 80)
+                
                 .clipShape(Circle())
+                
                 .overlay(
                     Circle()
-                        .stroke(.black, lineWidth: 2)
+                        .stroke(roundedCornerButtonColor, lineWidth: 1.5)
+                    
+                        
                 )
             }
             
@@ -129,7 +174,7 @@ struct Add_UserView: View {
                 imageName: "person.fill",
                 title: "User name",
                 text: $name, borderColor: roundedCornerButtonColor)
-            .frame(width: .infinity)
+            //.frame(width: .infinity)
             
             
             HStack(spacing: 10) {
@@ -137,43 +182,53 @@ struct Add_UserView: View {
                     imageName: "person.fill",
                     title: "Father name",
                     text: $fName, borderColor: roundedCornerButtonColor)
-                .frame(width: .infinity)
+                //.frame(width: .infinity)
                 
-                
+                //MARK: IT IS NUMBER. Adjust accordingly.
                 ReUsable_TextFeild(
                     imageName: "key.fill",
-                    title: "User Serial No",
+                    title: "Serial No",
                     text: $serialNo, borderColor: roundedCornerButtonColor)
-                .frame(width: .infinity)
+                .frame(width: 135)
+                .keyboardType(.numberPad)
+                //.frame(width: 150)
                 
             }
             
             
             HStack(spacing: 10) {
-                ReUsable_TextFeild(
-                    imageName: "phone.fill",
-                    title: "User Contact",
-                    text: $contact, borderColor: roundedCornerButtonColor)
-                .frame(width: .infinity)
+                
+                ReUsable_iPhoneNumberFeild(
+                    title: "+92-000-0000000",
+                    text: $userContact,
+                    borderColor: roundedCornerButtonColor)
+                .keyboardType(.numberPad)
+
                 
                 
                 //MARK: DO NOT FORGET.
                 ReUsable_TextFeild(
-                    imageName: "calendar.badge.clock",
-                    title: "Date",
-                    text: $contact, borderColor: roundedCornerButtonColor)
-                .frame(width: .infinity)
+                    imageName: "",
+                    title: "",
+                    text: $optional, borderColor: roundedCornerButtonColor)
+                .frame(width: 135)
+                .overlay {
+                    DatePicker("", selection: $userAdding_date, in: ...Date.now, displayedComponents: .date)
+                        //.frame(width: 200, height: 200)
+                        //.scaleEffect(0.8)
+                        .padding(.trailing, 8)
+                }
+                
                 
             }
         }
+        
     }
     
     var SecondHalfView: some View {
         Group {
-            
-            
             //showMonth_line1. defualt
-            HStack {
+            HStack(spacing: 10) {
                 ReUseable_ValueFeild(title: "Fee", value: $feeMonth1, borderColor: roundedCornerButtonColor, selectedMonth: $selectedMonth1)
                 
                 ReUseable_ValueFeild(title: "Fee", value: $feeMonth2, borderColor: roundedCornerButtonColor, selectedMonth: $selectedMonth2)
@@ -197,28 +252,6 @@ struct Add_UserView: View {
                 
                 ReUseable_ValueFeild(title: "Fee", value: $feeMonth9, borderColor: roundedCornerButtonColor, selectedMonth: $selectedMonth9)
             }
-            
-            
-            
-            ReUsable_Button(
-                title: "Save",
-                buttonBackgroundColor: validat_AddView ? Color("softbutton_Color") : Color("softbutton_Color").opacity(0.5)) {
-                if let wrappedImage = image {
-                    if let imageData = wrappedImage.jpegData(compressionQuality: 0.5) {
-                        userAdmin_vm.progressBar_rolling = true
-                        userAdmin_vm.saveImage(imageName: "imageName", image: wrappedImage)
-                        userAdmin_vm.addUser(name: name, serialNo: serialNo, profileUIimage: imageData)
-                        userAdmin_vm.getUsers()
-                    }
-                }
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    //user_vm.fetchUsers()//
-                    isImageSelected = false
-                    self.dismiss()
-                }
-            }
-            .disabled(!validat_AddView)
         }
     }
     
@@ -252,8 +285,9 @@ struct Add_UserView: View {
         }
     }
     
+    //MARK: do not forget
     var validat_AddView: Bool {
-        if image == nil || name.isEmpty || serialNo.isEmpty || fName.isEmpty || contact.isEmpty {
+        if image == nil || name.isEmpty || serialNo.isEmpty || fName.isEmpty || userContact.isEmpty {
             //_ = wrappedImage.jpegData(compressionQuality: 0.5)
             return false
         }

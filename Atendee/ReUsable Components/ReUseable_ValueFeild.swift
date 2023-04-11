@@ -18,6 +18,7 @@ struct ReUseable_ValueFeild: View {
             TextField(title, value: $value, format: .number)
                 .multilineTextAlignment(.center)
                 .autocorrectionDisabled()
+                .keyboardType(.numberPad)
                 .textInputAutocapitalization(.none)
                 .foregroundColor(.secondary)
                 .font(Font.body.weight(.bold))
@@ -29,6 +30,7 @@ struct ReUseable_ValueFeild: View {
                 }
             }
             .padding(.top, 4)
+            .tint(Color("softbutton_Color"))
         }
         .overlay {
             RoundedRectangle(cornerRadius: 8)

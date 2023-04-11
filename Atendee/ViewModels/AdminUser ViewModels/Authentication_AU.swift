@@ -51,7 +51,7 @@ import FirebaseStorage
     }
     
     
-    func addUser(name: String, serialNo: String, profileUIimage: Data) {
+    func addUser(name: String, serialNo: String, profileUIimage: Data, userAdding_date: Date, userContact: String) {
         //we need set the path for the Firebase Storage reference, which means that it needs to be unique to ensure that each file uploaded to Firebase Storage has a unique path.
         let storageRef = self.fireStorage.reference(withPath: serialNo)
         
@@ -71,7 +71,9 @@ import FirebaseStorage
                     let userData: [String: Any] = [
                         "name": name,
                         "serialNo": serialNo,
-                        "profileUIimage": url.absoluteString
+                        "profileUIimage": url.absoluteString,
+                        "userAdding_date": userAdding_date,
+                        "userContact": userContact
                     ]
                     
                     self.fireStore.collection(self.currentUser_email).addDocument(data: userData) { error in
@@ -119,19 +121,16 @@ import FirebaseStorage
                 let profileImageURLString = data["profileUIimage"] as? String ?? ""
                 let profileUIimage = URL(string: profileImageURLString) // convert the string to a URL object
                 
-                let user = User(id: id, name: name, serialNo: serialNo, profileUIimage: profileUIimage)
+                let userAdding_date = data["userAdding_date"] as? Date ?? Date()
+                
+                let userContact = data["userContact"] as? String ?? ""
+                
+                let user = User(id: id, name: name, serialNo: serialNo, profileUIimage: profileUIimage, userAdding_date: userAdding_date, userContact: userContact)
                 print("User is \(user)")
-                //self.fileManager.saveData([user], fileName: "test1")
-                //print("User: \(user) is added to FM")
                 return user
             }
             
             self.fileManager.saveUsers_toFM(self.users, fileName: "test2")
-            //                print("Total users: \(self.users)")
-            //                for user in self.users {
-            //                    print("Single user: \(user)")
-            //                    self.fileManager.saveData([user], fileName: "test1")
-            //                }
         }
     }
     

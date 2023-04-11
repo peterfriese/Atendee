@@ -16,6 +16,11 @@ struct HomeView: View {
     @State private var isShowingadd_view = false
     
     let fileManager = FileManagerClass()
+    var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        return formatter
+    }
     
     var body: some View {
         NavigationView {
@@ -50,8 +55,12 @@ struct HomeView: View {
                                     .shadow(radius: 5)
                             }
                             
-                            Text(user.name)
-                            Text(user.serialNo) 
+                            VStack {
+                                Text(user.name)
+                                Text(user.userContact)
+                            }
+                            Text(user.serialNo)
+                            Text(user.userAdding_date, formatter: dateFormatter) 
                         }
                     }
                 }
