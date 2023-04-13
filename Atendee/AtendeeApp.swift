@@ -13,11 +13,13 @@ import FirebaseCore
 struct AtendeeApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject var userAdmin_vm = Authentication_AdminUser_VM()
+    @StateObject var userData_vm = UserData_VM()
     
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(userAdmin_vm)
+                .environmentObject(userData_vm)
         }
     }
 }

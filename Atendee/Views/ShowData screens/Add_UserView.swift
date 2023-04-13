@@ -12,6 +12,8 @@ import FirebaseFirestore
 
 struct Add_UserView: View {
     @EnvironmentObject var userAdmin_vm: Authentication_AdminUser_VM
+    @EnvironmentObject var userData_vm: UserData_VM
+    
     @State private var name = ""
     @State private var serialNo = ""
     @State private var fName = ""
@@ -100,15 +102,15 @@ struct Add_UserView: View {
                             if let wrappedImage = image {
                                 if let imageData = wrappedImage.jpegData(compressionQuality: 0.5) {
                                     userAdmin_vm.progressBar_rolling = true
-                                    userAdmin_vm.saveImage(imageName: "imageName", image: wrappedImage)
-                                    userAdmin_vm.addUser(
+                                    //userAdmin_vm.saveImage(imageName: "imageName", image: wrappedImage)
+                                    userData_vm.addUser(
                                         name: name,
                                         serialNo: serialNo,
                                         profileUIimage: imageData,
                                         userAdding_date: userAdding_date,
                                         userContact: userContact
                                     )
-                                    userAdmin_vm.getUsers()
+                                    userData_vm.getUsers()
                                 }
                             }
                             
@@ -300,140 +302,7 @@ struct Add_UserView_Previews: PreviewProvider {
     static var previews: some View {
         Add_UserView()
             .environmentObject(Authentication_AdminUser_VM())
+            .environmentObject(UserData_VM())
     }
 }
 
-
-/*
- var addView: some View {
-     ZStack {
-         
-         Color("backgroundColor")
-             .ignoresSafeArea()
-
-         VStack(spacing: 20) {
-             Button {
-                 isShowingImagePciker = true
-             } label: {
-                 VStack {
-                     if let image = self.image {
-                         Image(uiImage: image)
-                             .resizable()
-                             .scaledToFill()
-                         
-                     } else {
-                         Image(systemName: "person.fill")
-                             .font(.system(size: 50))
-                             .foregroundColor(.primary)
-                     }
-                 }
-                 .frame(width: 80, height: 80)
-                 .clipShape(Circle())
-                 .overlay(
-                     Circle()
-                         .stroke(.black, lineWidth: 2)
-                 )
-             }
-             
-             ReUsable_TextFeild(
-                 imageName: "person.fill",
-                 title: "User name",
-                 text: $name, borderColor: .red.opacity(0.5))
-             .frame(width: .infinity)
-             
-             
-             HStack(spacing: 10) {
-                 ReUsable_TextFeild(
-                     imageName: "person.fill",
-                     title: "Father name",
-                     text: $fName, borderColor: .red.opacity(0.5))
-                 .frame(width: .infinity)
-                 
-                 
-                 ReUsable_TextFeild(
-                     imageName: "key.fill",
-                     title: "User Serial No",
-                     text: $serialNo, borderColor: .red.opacity(0.5))
-                 .frame(width: .infinity)
-                 
-             }
-             
-             
-             HStack(spacing: 10) {
-                 ReUsable_TextFeild(
-                     imageName: "phone.fill",
-                     title: "User Contact",
-                     text: $contact, borderColor: .red.opacity(0.5))
-                 .frame(width: .infinity)
-                 
-                 
-                 //MARK: DO NOT FORGET.
-                 ReUsable_TextFeild(
-                     imageName: "calendar.badge.clock",
-                     title: "Date",
-                     text: $contact, borderColor: .red.opacity(0.5))
-                 .frame(width: .infinity)
-                 
-             }
-             
-             Spacer()
-             
-             
-             ReUsable_Button(
-                 title: "Save",
-                 buttonBackgroundColor: validat_AddView ? .green : .green.opacity(0.4)) {
-                 if let wrappedImage = image {
-                     if let imageData = wrappedImage.jpegData(compressionQuality: 0.5) {
-                         userAdmin_vm.progressBar_rolling = true
-                         userAdmin_vm.saveImage(imageName: "imageName", image: wrappedImage)
-                         userAdmin_vm.addUser(name: name, serialNo: serialNo, profileUIimage: imageData)
-                         userAdmin_vm.getUsers()
-                     }
-                 }
-                 
-                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                     //user_vm.fetchUsers()//
-                     isImageSelected = false
-                     self.dismiss()
-                 }
-             }
-             .disabled(!validat_AddView)
-             
-         }
-         //.textFieldStyle(.roundedBorder)
-         .padding()
-         .navigationTitle("Add new user")
-         .navigationBarTitleDisplayMode(.inline)
-         .sheet(isPresented: $isShowingImagePciker) {
-             ImagePicker2(image: $image)
-             //.environmentObject(user_vm.moc) //try this as well
-         }
-         
-         if userAdmin_vm.progressBar_rolling {
-             ZStack {
-                 RoundedRectangle(cornerRadius: 0)
-                     .fill(Material.ultraThin)
-                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                     .ignoresSafeArea()
-                 
-                 
-                 RoundedRectangle(cornerRadius: 8)
-                     //.fill(Material.ultraThin)
-                     .fill(Color.green)
-                     .frame(width: 125, height: 125)
-                     .foregroundColor(.white)
-                     .cornerRadius(8)
-                     .overlay {
-                         VStack(spacing: 15) {
-                             Spacer()
-                             ProgressView()
-                             //Spacer()
-                             Text("Logging...")
-                             Spacer()
-                         }
-                     }
-             }
-         }
-     }
- }
- */

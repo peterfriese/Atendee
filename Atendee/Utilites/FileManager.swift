@@ -132,6 +132,49 @@ class FileManagerClass {
         }
     }
     
+    
+    func saveAdmin_toFM(_ data: Admin, fileName: String) {
+        //get the url for the folder we want to save data in...
+        guard let fileURL = getFilePathURL(fileName: fileName) else { return }
+        
+        
+        //Encode array of User objects into a Data object
+        do {
+            guard let data = try? encoder.encode(data) else {
+                print("Can not encode the data")
+                return
+            }
+            
+            //The Data object is written to disk.
+            try data.write(to: fileURL, options: .atomic)//atomic is used to write the data atomically to the file system.
+        } catch {
+            print("Error saving data: \(error.localizedDescription)")
+        }
+    }
+    func getAdmin_fromFM(fileName: String) -> Admin? {
+        guard let fileURL = getFilePathURL(fileName: fileName) else { return nil }
+        
+        do {
+            //read the data on the specified file.
+            guard let data = try? Data(contentsOf: fileURL, options: .mappedIfSafe) else {
+                return nil
+            }
+            
+            //decode the Data object into an array of User objects
+            guard let admin = try? decoder.decode(Admin.self, from: data) else {
+                print("Can not decode the Data")
+                return nil
+            }
+            
+            return admin
+        } catch {
+            print("Error getting data: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
+    
+    
     private func getFilePathURL(fileName: String) -> URL? {
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return nil }
         //if we get into that particular directory.

@@ -88,7 +88,7 @@ struct Admin_LoginView: View {
                         //MARK: Google sign in.
                         Sign_inWith_Button(title: "Sign in with", image: "g.circle", onClick: {
 //                            userAdmin_vm.progressBar_rolling = true
-//                            userAdmin_vm.admin_signInWithGoogle()
+                            userAdmin_vm.admin_signInWithGoogle()
                             userAdmin_vm.progressBar_rolling = true
                         })
                         

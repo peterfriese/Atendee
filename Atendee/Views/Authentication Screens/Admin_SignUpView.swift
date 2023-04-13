@@ -77,7 +77,12 @@ struct Admin_SignUpView: View {
                     ReUsable_Button(title: "Register", buttonBackgroundColor: Color("softbutton_Color")) {
                         
                         if let wrappedImage = image {
-                            userAdmin_vm.validateEmail_Password_adminRegister(image: wrappedImage)
+                            if let imageData = wrappedImage.jpegData(compressionQuality: 0.5) {
+                                userAdmin_vm.validateEmail_Password_adminRegister(name: "farid", email: userAdmin_vm.email, password: userAdmin_vm.password, profileImage: imageData)
+                            }
+                            //userAdmin_vm.validateEmail_Password_adminRegister(image: wrappedImage)
+                            
+                            //MARK: show password if face lock is done.
                         }
                         //userAdmin_vm.progressBar_rolling = false
                         

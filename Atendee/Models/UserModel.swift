@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct User: Identifiable, Codable {
-    var id: String = UUID().uuidString
+    var id: String = UUID().uuidString  //MARK: @docID
     var name: String
     var serialNo: String  //combination of string or only int
     var profileUIimage: URL?

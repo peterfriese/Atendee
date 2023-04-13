@@ -23,15 +23,15 @@ import FirebaseStorage
     @Published var error_Message = "errorMessage"
     @Published var newMessage = "New message"
     @Published var progressBar_rolling = false
-    @Published var users: [User] = []
     //@Published var users = file
     
     @AppStorage("currentUser_email") var currentUser_email = "Unknow_email"
     @AppStorage("currentUser_uid") var currentUser_uid = "Unknow_uid"
+    @AppStorage("current_admin_uid") var current_admin_uid = "Unknow_admin_uid"
     
-    init() {
-        fetchUsers2()
-    }
+//    init() {
+//        fetchUsers2()
+//    }
     
     let fireStore = Firestore.firestore()
     let fireStorage = Storage.storage()
@@ -51,188 +51,97 @@ import FirebaseStorage
     }
     
     
-    func addUser(name: String, serialNo: String, profileUIimage: Data, userAdding_date: Date, userContact: String) {
-        //we need set the path for the Firebase Storage reference, which means that it needs to be unique to ensure that each file uploaded to Firebase Storage has a unique path.
-        let storageRef = self.fireStorage.reference(withPath: serialNo)
-        
-        
-        //upload the user's profile image to Firebase Storage.
-        storageRef.putData(profileUIimage, metadata: nil) { metaData, error in
-            if let error = error {
-                self.error_Message = "Error uploading image: \(error.localizedDescription)"
-                self.progressBar_rolling = false
-                return
-            }//error during the uploading.
-            
-            //as we have uploaded the user profileImage, now we need to download its url so that we add this profileImage to the document as well with the name and serialNo.
-            storageRef.downloadURL { result in
-                switch result {
-                case .success(let url):
-                    let userData: [String: Any] = [
-                        "name": name,
-                        "serialNo": serialNo,
-                        "profileUIimage": url.absoluteString,
-                        "userAdding_date": userAdding_date,
-                        "userContact": userContact
-                    ]
-                    
-                    self.fireStore.collection(self.currentUser_email).addDocument(data: userData) { error in
-                        if let error = error {
-                            self.error_Message = "Error storing user data: \(error.localizedDescription)"
-                            self.progressBar_rolling = false
-                            print("error while saving user to firestore")
-                            return
-                        }
-                        
-                        self.error_Message = "User data stored successfully"
-                        //self.newMessage = self.currentUser_email
-                        self.progressBar_rolling = false
-                    }
-                    
-                case .failure(let error):
-                    self.error_Message = "Error retrieving download URL: \(error.localizedDescription)"
-                    self.progressBar_rolling = false
-                }
-            }
-        }
-    }
-    
-    func fetchUsers2() {
-        //go to the specific collection, and then we put a listener. Local writes in your app will invoke snapshot listeners immediately. When you perform a write, your listeners will be notified with the new data before the data is sent to the backend.
-        Firestore.firestore().collection(currentUser_email).addSnapshotListener { snapShot, error in
-            
-            //doc exist.
-            guard let documents = snapShot?.documents else {
-                print("No documents!")
-                return
-            }
-            
-            //now transorm the documents into User model.
-            self.users = documents.map { query_snapShot -> User in
-                
-                //go into each doc and read the data.
-                let data = query_snapShot.data()
-                let id = query_snapShot.documentID
-                
-                let name = data["name"] as? String ?? ""
-                
-                let serialNo = data["serialNo"] as? String ?? ""
-                
-                let profileImageURLString = data["profileUIimage"] as? String ?? ""
-                let profileUIimage = URL(string: profileImageURLString) // convert the string to a URL object
-                
-                let userAdding_date = data["userAdding_date"] as? Date ?? Date()
-                
-                let userContact = data["userContact"] as? String ?? ""
-                
-                let user = User(id: id, name: name, serialNo: serialNo, profileUIimage: profileUIimage, userAdding_date: userAdding_date, userContact: userContact)
-                print("User is \(user)")
-                return user
-            }
-            
-            self.fileManager.saveUsers_toFM(self.users, fileName: "test2")
-        }
-    }
-    
-    func getUsers() {
-        guard let users = fileManager.getUsers_fromFM(fileName: "test2") else { return }
-        self.users = users
-        print("All FM users are: \(users)")
-    }
-    
-    
-    
     
     
     //✅
-    //MARK: Admin Authentication.
-    func admin_registeration(profileImage: UIImage, completion: @escaping (String) -> Void) {
-        self.isUserLoggedIn = false
+    //MARK: Admin Registeration.
+    func admin_registeration(name: String, email: String, password: String, profileImage: Data, completion: @escaping (String) -> Void) {
         Auth.auth().createUser(withEmail: email, password: password) { result, error in
             if let error = error {
-                print("Error creating user: \(error.localizedDescription)")
+                print("Error creating Admin: \(error.localizedDescription)")
                 self.progressBar_rolling = false
                 return
             }
             
-            guard let user = result?.user else {
+            guard let admin = result?.user else {
                 self.error_Message = "Error creating user: no user object found"
                 self.progressBar_rolling = false
                 return
             }
             
-            self.currentUser_uid = user.uid
-            print("calling the updated uid: \(self.currentUser_uid)")
-            
+            self.current_admin_uid = admin.uid
+            //print("calling the updated uid: \(self.currentUser_uid)")
+
             //guard let u_id = currentUser_uid else { return }
-            completion(self.currentUser_uid)
-            print("after completion: uid: \(self.currentUser_uid)")
+            completion(self.current_admin_uid)
+            print("after completion: uid: \(self.current_admin_uid)")
             
-            let storageRef = Storage.storage().reference(withPath: user.uid)
+            let storageRef = Storage.storage().reference(withPath: self.current_admin_uid)//create unique path with his uid.
             
-            guard let imageData = profileImage.jpegData(compressionQuality: 0.5) else {
-                self.error_Message = "Error converting image to data"
-                self.progressBar_rolling = false
-                return
-            }
+//            guard let imageData = profileImage.jpegData(compressionQuality: 0.5) else {
+//                self.error_Message = "Error converting image to data"
+//                self.progressBar_rolling = false
+//                return
+//            }
             
-            storageRef.putData(imageData, metadata: nil) { metadata, error in
+            storageRef.putData(profileImage, metadata: nil) { metadata, error in
                 if let error = error {
                     self.error_Message = "Error uploading image: \(error.localizedDescription)"
                     self.progressBar_rolling = false
                     return
                 }
                 
-                storageRef.downloadURL { url, error in
-                    if let error = error {
-                        self.error_Message = "Error retrieving download URL: \(error.localizedDescription)"
-                        self.progressBar_rolling = false
-                        return
-                    }
-                    
-                    guard let downloadURL = url else {
-                        self.error_Message = "Error retrieving download URL: no URL found"
-                        self.progressBar_rolling = false
-                        return
-                    }
-                    
-                    let userData: [String: Any] = [
-                        "email": user.email ?? "unKnownEmail",
-                        "profileImageURL": downloadURL.absoluteString
-                    ]
-                    
-                    Firestore.firestore().collection("users").document(user.uid).setData(userData) { error in
-                        if let error = error {
-                            self.error_Message = "Error storing user data: \(error.localizedDescription)"
+                storageRef.downloadURL { result in
+                    switch result {
+                    case .success(let url):
+                        let userData: [String: Any] = [
+                            "name": name,
+                            "email": email,
+                            "password": password,
+                            "uid": self.current_admin_uid,
+                            "profileUIimage": url.absoluteString,
+                            
+                        ]
+                        
+                        
+                        //self.fireStore.collection("admins").document(self.currentUser_uid).setda .addDocument(data: userData)
+                        //MARK: Use current uid
+                        Firestore.firestore().collection("admins").document(admin.uid).setData(userData) { error in
+                            if let error = error {
+                                self.error_Message = "Error storing admin data: \(error.localizedDescription)"
+                                self.progressBar_rolling = false
+                                print("error while saving admin to firestore")
+                                return
+                            }
+                            
+                            self.error_Message = "Admin data stored successfully"
+                            //self.newMessage = self.currentUser_email
                             self.progressBar_rolling = false
-                            return
                         }
                         
-                        self.error_Message = "User data stored successfully"
+                    case .failure(let error):
+                        self.error_Message = "Error retrieving admin download URL: \(error.localizedDescription)"
                         self.progressBar_rolling = false
                     }
                 }
             }
         }
-        
         self.isUserLoggedIn = false
     }
-    
-    func validateEmail_Password_adminRegister(image: UIImage) {
-        progressBar_rolling = true
+    //name: String, email: String, password: String,
+    func validateEmail_Password_adminRegister(name: String, email: String, password: String, profileImage: Data) {
         if !email.isEmpty && !password.isEmpty {
             if isValidateEmail() {
                 if isValidPassword() {
-                    
-                    admin_registeration(profileImage: image) { currentUser_uid in
-                        //self.current_admin_uid = currentUser_uid
+                    admin_registeration(name: name, email: email, password: password, profileImage: profileImage) { currentUser_uid in
+                        self.current_admin_uid = currentUser_uid
                         print("Admin user id assigned: \(currentUser_uid)")
                         //self.saveImage(imageName: "\(currentUser_uid)", image: image)
-                        print("Admin picture saved in FM with the uid: \(currentUser_uid)")
+                        //print("Admin picture saved in FM with the uid: \(currentUser_uid)")
                         //self.error_Message = "Successfully Registered"
                         //self.progressBar_rolling = true
                     }
-                    print("Admin picture saved in FM with the uid: \(currentUser_uid)")
+                    //print("Admin picture saved in FM with the uid: \(currentUser_uid)")
                     error_Message = "Sucessfully Registered"
                     
                 } else {
@@ -241,14 +150,37 @@ import FirebaseStorage
                 }
                 
             } else {
-                self.progressBar_rolling = false
                 error_Message = "Wrong email"
             }
         }
-        self.progressBar_rolling = false
     }
     
     
+    
+    
+    
+    //MARK: Admin Login
+    func admin_Login() {
+        Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
+            if error != nil {
+                print("There was an error while login...\(String(describing: error?.localizedDescription))")
+                self?.error_Message = String(describing: error?.localizedDescription)
+                self?.progressBar_rolling = false
+                self?.isUserLoggedIn = false
+            }
+            
+            self?.currentUser_email = Auth.auth().currentUser?.email ?? "UnknownUser_email"
+            //updated
+            self?.current_admin_uid = Auth.auth().currentUser?.uid ?? "Unknown currentUser_uid"
+            //self.fetchUsers()
+            self?.progressBar_rolling = false
+            //self.isUserLoggedIn = true
+            
+            DispatchQueue.main.async {
+                self?.signedIn = true
+            }
+        }
+    }
     func validateEmail_Password_adminLogin() {
         if !email.isEmpty && !password.isEmpty {
             if isValidateEmail() {
@@ -262,29 +194,6 @@ import FirebaseStorage
             }
         }
     }
-    //MARK: It is a part of the above func.
-    func admin_Login() {
-        Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
-            if error != nil {
-                print("There was an error while login...\(String(describing: error?.localizedDescription))")
-                self?.error_Message = String(describing: error?.localizedDescription)
-                self?.progressBar_rolling = false
-                self?.isUserLoggedIn = false
-            }
-            
-            self?.currentUser_email = Auth.auth().currentUser?.email ?? "UnknownUser_email"
-            //updated
-            self?.currentUser_uid = Auth.auth().currentUser?.uid ?? "Unknown currentUser_uid"
-            //self.fetchUsers()
-            self?.progressBar_rolling = false
-            //self.isUserLoggedIn = true
-            
-            DispatchQueue.main.async {
-                self?.signedIn = true
-            }
-        }
-    }
-    
     func admin_signInWithGoogle() {
         //get app client id.
         guard let clientID = FirebaseApp.app()?.options.clientID else { return }
@@ -320,11 +229,19 @@ import FirebaseStorage
                         return
                     }
                     
-                    //store the email in the users collection.
+                    //store the email in the users collection. //MARK: do work here 
                     guard let user = res?.user else { return }
                     self.currentUser_uid = user.uid
-                    let userData = ["email": user.email ?? ""]
-                    Firestore.firestore().collection("users").document(user.uid).setData(userData) { error in
+                    let userData = [
+                        "email": user.email ?? ""
+//                        "name": user.displayName,
+//                        "email": email,
+//                        "password": password,
+//                        "uid": self.current_admin_uid,
+//                        "profileUIimage": url.absoluteString,
+
+                    ]
+                    Firestore.firestore().collection("admins").document(user.uid).setData(userData) { error in
                         if let error = error {
                             self.progressBar_rolling = false
                             print("Error storing user data: \(error.localizedDescription)")
@@ -340,7 +257,6 @@ import FirebaseStorage
                 //self.progressBar_rolling = false
             }
     }
-    
     func admin_signOut() {
         //show progress view after logging out
         do {
@@ -356,12 +272,13 @@ import FirebaseStorage
     
     
     
+    
     //MARK: User Authentication.
     func validate_user(email: String, secretCode: String, completion: @escaping (Bool) ->() ) {
         let email = email // email
         
         // Query the "users" collection for a document with the specified email address
-        Firestore.firestore().collection("users").whereField("email", isEqualTo: email).getDocuments { (querySnapshot, error) in
+        Firestore.firestore().collection("admins").whereField("email", isEqualTo: email).getDocuments { (querySnapshot, error) in
             if let error = error {
                 print("Error fetching user document: \(error.localizedDescription)")
                 completion(false)
@@ -385,7 +302,6 @@ import FirebaseStorage
             }
         }
     }
-    
     func user_signOut() {
         //show progress view after logging out
         do {
@@ -397,6 +313,9 @@ import FirebaseStorage
             print("There was an error while signing Out! \(error)")
         }
     }
+    
+    
+    
     
     
     //MARK: For both
@@ -411,101 +330,119 @@ import FirebaseStorage
         return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: trimmedPassword)
     }
     
-    
-    //No need of this. we migh use @AppStorage for this.
-    func fetch_Admins() {
-        
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        
-        Firestore.firestore().collection("users").document(uid).getDocument { snapshot, error in
-            guard let data = snapshot?.data() else {
-                self.error_Message = "Error fetching user data: \(error?.localizedDescription ?? "unknown error")"
-                return
-            }
-            
-            guard let admin_pp = self.loadImageFromDiskWith(fileName: "\(self.currentUser_uid)") else {
-                print("fetch_admin else part is called.")
-                if let admin_image_data = data["profileImageURL"] as? Data, let uiImagee = UIImage(data: admin_image_data) {
-                    //self.profileImageURL = url
-                    //now here we can store the image in the FM. and retrieve for offline use.
-                    print("The uiImagee: is: \(uiImagee)")
-                    self.saveImage(imageName: "iphone", image: uiImagee)
-                    print("User image has been added to FM from FireStore")
-                    
-                    guard let fireStore_admin_pic = self.loadImageFromDiskWith(fileName: "iphone") else {return }
-                    
-                    self.admin_profileImage = fireStore_admin_pic
-                    print("Succesfuly displayed")
-                }
-                
-                return
-            }
-            
-            self.admin_profileImage = admin_pp
-        }
-        
-    }
-    
-    
-    
-    
-    func saveImage(imageName: String, image: UIImage) {
-        guard let documentsDirectory = FileManager
-            .default
-            .urls(for: .documentDirectory, in: .userDomainMask)
-            .first else { return }
-        
-        let fileName = imageName
-        let fileURL = documentsDirectory.appendingPathComponent(fileName)
-        guard let data = image.jpegData(compressionQuality: 1) else { return }
-        
-        //Checks if file exists, removes it if so.
-        if FileManager.default.fileExists(atPath: fileURL.path) {
-            do {
-                try FileManager.default.removeItem(atPath: fileURL.path)
-                print("Removed old image")
-            } catch let removeError {
-                print("couldn't remove file at path", removeError)
-            }
-        }
-        
-        do {
-            try data.write(to: fileURL)
-            print("Image has been stored in FM...")
-        } catch let error {
-            print("error saving file with error", error)
-        }
-        
-    }
-    
-    func loadImageFromDiskWith(fileName: String) -> UIImage? {
-        
-        if fileName.isEmpty {   //fileName.isReallyEmpty
-            return nil
-        }
-        
-        let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
-        
-        let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
-        let paths = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
-        
-        if let dirPath = paths.first {
-            let imageUrl = URL(fileURLWithPath: dirPath).appendingPathComponent(fileName)
-            let image = UIImage(contentsOfFile: imageUrl.path)
-            return image
-            
-        }
-        
-        return nil
-    }
-    
-    func get_admin_profileImage() {
-        admin_profileImage = loadImageFromDiskWith(fileName: "\(currentUser_uid)")
-        
-    }
 }
 //}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+ func saveImage(imageName: String, image: UIImage) {
+     guard let documentsDirectory = FileManager
+         .default
+         .urls(for: .documentDirectory, in: .userDomainMask)
+         .first else { return }
+     
+     let fileName = imageName
+     let fileURL = documentsDirectory.appendingPathComponent(fileName)
+     guard let data = image.jpegData(compressionQuality: 1) else { return }
+     
+     //Checks if file exists, removes it if so.
+     if FileManager.default.fileExists(atPath: fileURL.path) {
+         do {
+             try FileManager.default.removeItem(atPath: fileURL.path)
+             print("Removed old image")
+         } catch let removeError {
+             print("couldn't remove file at path", removeError)
+         }
+     }
+     
+     do {
+         try data.write(to: fileURL)
+         print("Image has been stored in FM...")
+     } catch let error {
+         print("error saving file with error", error)
+     }
+     
+ }
+ 
+ func loadImageFromDiskWith(fileName: String) -> UIImage? {
+     
+     if fileName.isEmpty {   //fileName.isReallyEmpty
+         return nil
+     }
+     
+     let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
+     
+     let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
+     let paths = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
+     
+     if let dirPath = paths.first {
+         let imageUrl = URL(fileURLWithPath: dirPath).appendingPathComponent(fileName)
+         let image = UIImage(contentsOfFile: imageUrl.path)
+         return image
+         
+     }
+     
+     return nil
+ }
+ 
+ func get_admin_profileImage() {
+     admin_profileImage = loadImageFromDiskWith(fileName: "\(currentUser_uid)")
+     
+ }
+ 
+ 
+ 
+ func fetch_Admins() {
+     
+     guard let uid = Auth.auth().currentUser?.uid else { return }
+     
+     //guard let refTo_collectio = fireStore.collection("")
+     
+     Firestore.firestore().collection("admins").document(uid).getDocument { snapshot, error in
+         guard let data = snapshot?.data() else {
+             self.error_Message = "Error fetching user data: \(error?.localizedDescription ?? "unknown error")"
+             return
+         }
+         
+         guard let admin_pp = self.loadImageFromDiskWith(fileName: "\(self.currentUser_uid)") else {
+             print("fetch_admin else part is called.")
+             if let admin_image_data = data["profileImageURL"] as? Data, let uiImagee = UIImage(data: admin_image_data) {
+                 //self.profileImageURL = url
+                 //now here we can store the image in the FM. and retrieve for offline use.
+                 print("The uiImagee: is: \(uiImagee)")
+                 self.saveImage(imageName: "iphone", image: uiImagee)
+                 print("User image has been added to FM from FireStore")
+                 
+                 guard let fireStore_admin_pic = self.loadImageFromDiskWith(fileName: "iphone") else {return }
+                 
+                 self.admin_profileImage = fireStore_admin_pic
+                 print("Succesfuly displayed")
+             }
+             
+             return
+         }
+         
+         self.admin_profileImage = admin_pp
+     }
+     
+ }
+ */
 
 
 
@@ -1075,4 +1012,111 @@ import FirebaseStorage
 
 
 /*
+ func admin_registeration(profileImage: UIImage, completion: @escaping (String) -> Void) {
+     self.isUserLoggedIn = false
+     Auth.auth().createUser(withEmail: email, password: password) { result, error in
+         if let error = error {
+             print("Error creating user: \(error.localizedDescription)")
+             self.progressBar_rolling = false
+             return
+         }
+         
+         guard let user = result?.user else {
+             self.error_Message = "Error creating user: no user object found"
+             self.progressBar_rolling = false
+             return
+         }
+         
+         self.currentUser_uid = user.uid
+         print("calling the updated uid: \(self.currentUser_uid)")
+         
+         //guard let u_id = currentUser_uid else { return }
+         completion(self.currentUser_uid)
+         print("after completion: uid: \(self.currentUser_uid)")
+         
+         let storageRef = Storage.storage().reference(withPath: user.uid)
+         
+         guard let imageData = profileImage.jpegData(compressionQuality: 0.5) else {
+             self.error_Message = "Error converting image to data"
+             self.progressBar_rolling = false
+             return
+         }
+         
+         storageRef.putData(imageData, metadata: nil) { metadata, error in
+             if let error = error {
+                 self.error_Message = "Error uploading image: \(error.localizedDescription)"
+                 self.progressBar_rolling = false
+                 return
+             }
+             
+             storageRef.downloadURL { url, error in
+                 if let error = error {
+                     self.error_Message = "Error retrieving download URL: \(error.localizedDescription)"
+                     self.progressBar_rolling = false
+                     return
+                 }
+                 
+                 guard let downloadURL = url else {
+                     self.error_Message = "Error retrieving download URL: no URL found"
+                     self.progressBar_rolling = false
+                     return
+                 }
+                 
+                 let userData: [String: Any] = [
+                     "email": user.email ?? "unKnownEmail",
+                     "profileImageURL": downloadURL.absoluteString
+                 ]
+                 
+                 Firestore.firestore().collection("users").document(user.uid).setData(userData) { error in
+                     if let error = error {
+                         self.error_Message = "Error storing user data: \(error.localizedDescription)"
+                         self.progressBar_rolling = false
+                         return
+                     }
+                     
+                     self.error_Message = "User data stored successfully"
+                     self.progressBar_rolling = false
+                 }
+             }
+         }
+     }
+     
+     self.isUserLoggedIn = false
+ }
+ 
+ 
+ 
+ 
+ its part2
+ func validateEmail_Password_adminRegister(image: UIImage) {
+     progressBar_rolling = true
+     if !email.isEmpty && !password.isEmpty {
+         if isValidateEmail() {
+             if isValidPassword() {
+                 
+                 admin_registeration(profileImage: image) { currentUser_uid in
+                     //self.current_admin_uid = currentUser_uid
+                     print("Admin user id assigned: \(currentUser_uid)")
+                     //self.saveImage(imageName: "\(currentUser_uid)", image: image)
+                     print("Admin picture saved in FM with the uid: \(currentUser_uid)")
+                     //self.error_Message = "Successfully Registered"
+                     //self.progressBar_rolling = true
+                 }
+                 print("Admin picture saved in FM with the uid: \(currentUser_uid)")
+                 error_Message = "Sucessfully Registered"
+                 
+             } else {
+                 self.progressBar_rolling = false
+                 error_Message = "Wrong Password"
+             }
+             
+         } else {
+             self.progressBar_rolling = false
+             error_Message = "Wrong email"
+         }
+     }
+     self.progressBar_rolling = false
+ }
+
  */
+
