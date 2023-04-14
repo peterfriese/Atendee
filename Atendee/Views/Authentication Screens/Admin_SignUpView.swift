@@ -15,6 +15,7 @@ struct Admin_SignUpView: View {
     @State private var image: UIImage?
     @State private var isShowingImagePciker = false
     let router: AnyRouter
+    let roundedCornerButtonColor = Color("roundedLineColor").opacity(0.3)
     
     var body: some View {
         NavigationView {
@@ -23,12 +24,12 @@ struct Admin_SignUpView: View {
                     .ignoresSafeArea()
                 
                 VStack(alignment: .leading) {
-                    
-                    HStack {
-                        Spacer()
-                        ReUsable_Logo(width: 250)
-                        Spacer()
-                    }
+                    Spacer()
+//                    HStack {
+//                        Spacer()
+//                        ReUsable_Logo(width: 100)
+//                        Spacer()
+//                    }
                     
                     
                     //Image picker.
@@ -57,7 +58,7 @@ struct Admin_SignUpView: View {
                             .clipShape(Circle())
                             .overlay(
                                 Circle()
-                                    .stroke(.white.opacity(0.5), lineWidth: 1.7)
+                                    .stroke(roundedCornerButtonColor, lineWidth: 1.7)
                             )
                         }
                         .padding(.horizontal)
@@ -65,27 +66,24 @@ struct Admin_SignUpView: View {
                     }
                     
                     
-                    //textfeilds
-                    ReUsable_TextFeild(imageName: "envelope.fill", title: "Enter your email here...", text: $userAdmin_vm.email, borderColor: .white.opacity(0.5)).padding(.vertical)
+                    ReUsable_TextFeild(imageName: "person.fill", title: "Enter your Name", text: $userAdmin_vm.name, borderColor: roundedCornerButtonColor)//.padding(.vertical)
                     
-                    ReUsable_TextFeild(imageName: "lock.fill", title: "Enter your password here...", text: $userAdmin_vm.password, borderColor: .white.opacity(0.5))//.padding(.vertical)
+                    //textfeilds
+                    ReUsable_TextFeild(imageName: "envelope.fill", title: "Enter your email", text: $userAdmin_vm.email, borderColor: roundedCornerButtonColor).padding(.vertical)
+                    
+                    ReUsable_TextFeild(imageName: "lock.fill", title: "Enter your password", text: $userAdmin_vm.password, borderColor: roundedCornerButtonColor)
                     
                     Text(userAdmin_vm.error_Message)
                         .foregroundColor(.red)
                         .padding(.horizontal)
                     
                     ReUsable_Button(title: "Register", buttonBackgroundColor: Color("softbutton_Color")) {
-                        
                         if let wrappedImage = image {
                             if let imageData = wrappedImage.jpegData(compressionQuality: 0.5) {
-                                userAdmin_vm.validateEmail_Password_adminRegister(name: "farid", email: userAdmin_vm.email, password: userAdmin_vm.password, profileImage: imageData)
+                                userAdmin_vm.validateEmail_Password_adminRegister(name: userAdmin_vm.name, email: userAdmin_vm.email, password: userAdmin_vm.password, profileImage: imageData)
                             }
-                            //userAdmin_vm.validateEmail_Password_adminRegister(image: wrappedImage)
-                            
                             //MARK: show password if face lock is done.
                         }
-                        //userAdmin_vm.progressBar_rolling = false
-                        
                     }
                     
                     
@@ -106,6 +104,7 @@ struct Admin_SignUpView: View {
                 }
                 .padding(.horizontal)
                 
+                // MARK: The progress bar when user click on the login button
                 if userAdmin_vm.progressBar_rolling {
                     ZStack {
                         RoundedRectangle(cornerRadius: 0)
@@ -130,6 +129,8 @@ struct Admin_SignUpView: View {
                                 }
                             }
                     }
+                } else {
+                    //Text("Nothing")
                 }
             }
         }

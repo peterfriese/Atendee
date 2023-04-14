@@ -20,7 +20,7 @@ struct UserLogin_View: View {
     
     var body: some View {
         NavigationView {
-            if userAdmin_vm.isUserLoggedIn {
+            if userAdmin_vm.signedIn {
                 MainView()
             } else {
                 userLoginView
@@ -52,12 +52,19 @@ struct UserLogin_View: View {
                 ReUsable_TextFeild(imageName: "lock.fill", title: "Enter the provided Secret Code", text: $secretCode, borderColor: .white.opacity(0.5))
                 
                 ReUsable_Button(title: "Login", buttonBackgroundColor: Color("softbutton_Color")) {
-                    
+                    userAdmin_vm.progressBar_rolling = true
                     userAdmin_vm.validate_user(email: userAdmin_vm.email, secretCode: secretCode) { isAvailable in
                         if isAvailable {
                             print("User is exist...")
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                userAdmin_vm.progressBar_rolling = false
+                                userAdmin_vm.signedIn = true
+                                
+                            }
                             alertTitle = "User is exist"
+                            
                         } else {
+                            userAdmin_vm.progressBar_rolling = false
                             print("user is not exist...")
                             alertTitle = "user is not exist"
                             
@@ -73,6 +80,36 @@ struct UserLogin_View: View {
                 
             }
             .padding(.horizontal)
+            
+            
+            // MARK: The progress bar when user click on the login button
+            if userAdmin_vm.progressBar_rolling {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 0)
+                        .fill(Material.ultraThin)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .ignoresSafeArea()
+                    
+                    
+                    RoundedRectangle(cornerRadius: 8)
+                        //.fill(Material.ultraThin)
+                        .fill(Color.green)
+                        .frame(width: 125, height: 125)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                        .overlay {
+                            VStack(spacing: 15) {
+                                Spacer()
+                                ProgressView()
+                                //Spacer()
+                                Text("Logging...")
+                                Spacer()
+                            }
+                        }
+                }
+            } else {
+                //Text("Nothing")
+            }
         }
     }
 }

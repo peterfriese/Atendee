@@ -124,7 +124,12 @@ import FirebaseStorage
     
     
     func fetch_Admins2() {
-        let docRef = fireStore.collection("admins").document(self.current_admin_uid)
+        guard let uid = Auth.auth().currentUser?.uid else {
+            print("No data with the of the uid")
+            return
+        }
+        
+        let docRef = fireStore.collection("admins").document(uid)
         docRef.getDocument { snapshot, error in
             if let error = error {
                 print("Error fetching admin data: \(error.localizedDescription)")
@@ -151,6 +156,7 @@ import FirebaseStorage
             self.fileManager.saveAdmin_toFM(admin, fileName: "admin")
         }
     }
+    
     func getAdmin() {
         guard let admin = self.fileManager.getAdmin_fromFM(fileName: "admin") else {
             print("No admin Data")

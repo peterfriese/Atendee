@@ -17,7 +17,7 @@ struct UserAdmn_loginOptionsView: View {
         NavigationView {
             Two_optionsView
         }
-        .navigationBarBackButtonHidden(true)
+        .toolbarRole(.editor)
     }
     
     var Two_optionsView: some View {
@@ -67,6 +67,7 @@ struct UserAdmn_loginOptionsView_Previews: PreviewProvider {
         RouterView { router in
             UserAdmn_loginOptionsView(router: router)
                 .environmentObject(Authentication_AdminUser_VM())
+                .environmentObject(UserData_VM())
         }
     }
 }

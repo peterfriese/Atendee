@@ -16,9 +16,10 @@ import FirebaseStorage
 //extension Admin_Login {
 @MainActor class Authentication_AdminUser_VM: ObservableObject {
     
-    var isUserLoggedIn = false
+    //var isUserLoggedIn = false
     @Published var email = ""
     @Published var password = ""
+    @Published var name = ""
     
     @Published var error_Message = "errorMessage"
     @Published var newMessage = "New message"
@@ -45,6 +46,7 @@ import FirebaseStorage
     @Published var admin_profileImage: UIImage? = nil
     
     @Published var signedIn = false
+    //@AppStorage("signedIn") var signedIn = false //small change from published to appstorage.
     
     var isUserSignedIn: Bool {
         return Auth.auth().currentUser != nil
@@ -54,8 +56,9 @@ import FirebaseStorage
     
     
     //✅
-    //MARK: Admin Registeration.
+    //MARK: Admin Registeration. done
     func admin_registeration(name: String, email: String, password: String, profileImage: Data, completion: @escaping (String) -> Void) {
+        self.progressBar_rolling = true
         Auth.auth().createUser(withEmail: email, password: password) { result, error in
             if let error = error {
                 print("Error creating Admin: \(error.localizedDescription)")
@@ -70,19 +73,10 @@ import FirebaseStorage
             }
             
             self.current_admin_uid = admin.uid
-            //print("calling the updated uid: \(self.currentUser_uid)")
-
-            //guard let u_id = currentUser_uid else { return }
             completion(self.current_admin_uid)
             print("after completion: uid: \(self.current_admin_uid)")
             
             let storageRef = Storage.storage().reference(withPath: self.current_admin_uid)//create unique path with his uid.
-            
-//            guard let imageData = profileImage.jpegData(compressionQuality: 0.5) else {
-//                self.error_Message = "Error converting image to data"
-//                self.progressBar_rolling = false
-//                return
-//            }
             
             storageRef.putData(profileImage, metadata: nil) { metadata, error in
                 if let error = error {
@@ -103,8 +97,6 @@ import FirebaseStorage
                             
                         ]
                         
-                        
-                        //self.fireStore.collection("admins").document(self.currentUser_uid).setda .addDocument(data: userData)
                         //MARK: Use current uid
                         Firestore.firestore().collection("admins").document(admin.uid).setData(userData) { error in
                             if let error = error {
@@ -113,88 +105,103 @@ import FirebaseStorage
                                 print("error while saving admin to firestore")
                                 return
                             }
-                            
-                            self.error_Message = "Admin data stored successfully"
-                            //self.newMessage = self.currentUser_email
+                            //part3 done
+                            self.error_Message = "data stored succesfully"
                             self.progressBar_rolling = false
+
                         }
                         
                     case .failure(let error):
                         self.error_Message = "Error retrieving admin download URL: \(error.localizedDescription)"
                         self.progressBar_rolling = false
+                        
                     }
                 }
             }
         }
-        self.isUserLoggedIn = false
     }
     //name: String, email: String, password: String,
     func validateEmail_Password_adminRegister(name: String, email: String, password: String, profileImage: Data) {
-        if !email.isEmpty && !password.isEmpty {
-            if isValidateEmail() {
-                if isValidPassword() {
-                    admin_registeration(name: name, email: email, password: password, profileImage: profileImage) { currentUser_uid in
-                        self.current_admin_uid = currentUser_uid
-                        print("Admin user id assigned: \(currentUser_uid)")
-                        //self.saveImage(imageName: "\(currentUser_uid)", image: image)
-                        //print("Admin picture saved in FM with the uid: \(currentUser_uid)")
-                        //self.error_Message = "Successfully Registered"
-                        //self.progressBar_rolling = true
-                    }
-                    //print("Admin picture saved in FM with the uid: \(currentUser_uid)")
-                    error_Message = "Sucessfully Registered"
-                    
-                } else {
-                    self.progressBar_rolling = false
-                    error_Message = "Wrong Password"
-                }
-                
-            } else {
-                error_Message = "Wrong email"
-            }
-        }
+        
+        guard !email.isEmpty && !password.isEmpty else {
+               error_Message = "Email and password cannot be empty"
+            self.progressBar_rolling = false
+               return
+           }
+           
+           guard isValidateEmail() else {
+               error_Message = "Invalid email format"
+               self.progressBar_rolling = false
+               return
+           }
+           
+           guard isValidPassword() else {
+               error_Message = "Invalid password"
+               self.progressBar_rolling = false
+               return
+           }
+           
+           self.progressBar_rolling = true // Show progress bar
+           
+           admin_registeration(name: name, email: email, password: password, profileImage: profileImage) { currentUser_uid in
+               self.current_admin_uid = currentUser_uid
+               print("Admin user id assigned: \(currentUser_uid)")
+               self.error_Message = "Successfully Registered"
+               //self.progressBar_rolling = false // Hide progress bar after registration process completes
+           }
     }
     
     
     
     
     
-    //MARK: Admin Login
+    //MARK: Admin Login. done
     func admin_Login() {
+        self.progressBar_rolling = true
         Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
             if error != nil {
                 print("There was an error while login...\(String(describing: error?.localizedDescription))")
                 self?.error_Message = String(describing: error?.localizedDescription)
                 self?.progressBar_rolling = false
-                self?.isUserLoggedIn = false
+                //self?.isUserLoggedIn = false
+                self?.signedIn = true
             }
             
             self?.currentUser_email = Auth.auth().currentUser?.email ?? "UnknownUser_email"
             //updated
             self?.current_admin_uid = Auth.auth().currentUser?.uid ?? "Unknown currentUser_uid"
             //self.fetchUsers()
-            self?.progressBar_rolling = false
-            //self.isUserLoggedIn = true
             
             DispatchQueue.main.async {
+                print("logged in 2")
+                self?.progressBar_rolling = false
                 self?.signedIn = true
             }
         }
     }
     func validateEmail_Password_adminLogin() {
-        if !email.isEmpty && !password.isEmpty {
-            if isValidateEmail() {
-                if isValidPassword() {
-                    progressBar_rolling = true
-                    admin_Login()
-                } else { error_Message = "Wrong Password" }
-                
-            } else {
-                error_Message = "Wrong email"
-            }
+        guard !email.isEmpty && !password.isEmpty else {
+            return
         }
+        
+        guard isValidateEmail() else {
+            error_Message = "Wrong email"
+            return
+        }
+        
+        guard isValidPassword() else {
+            error_Message = "Wrong password"
+            return
+        }
+        
+        progressBar_rolling = true
+        admin_Login()
     }
+    
+    
+    //done de de done.
     func admin_signInWithGoogle() {
+        self.progressBar_rolling = true
         //get app client id.
         guard let clientID = FirebaseApp.app()?.options.clientID else { return }
         
@@ -214,7 +221,10 @@ import FirebaseStorage
                 
                 guard
                     let user = user?.user,
-                    let idToken = user.idToken else { return }
+                    let idToken = user.idToken else {
+                    self.progressBar_rolling = false
+                    return
+                }
                 
                 let accessToken = user.accessToken
                 
@@ -229,39 +239,49 @@ import FirebaseStorage
                         return
                     }
                     
-                    //store the email in the users collection. //MARK: do work here 
+                    
+                    //store the these in the users collection. //MARK: do work here. Done✅
                     guard let user = res?.user else { return }
-                    self.currentUser_uid = user.uid
+                    let email = user.email
+                    let name = user.email?.replacingOccurrences(of: "@gmail.com", with: "")
+                    let profileUIimage = user.photoURL
+                    let uid = user.uid
+                    
                     let userData = [
-                        "email": user.email ?? ""
-//                        "name": user.displayName,
-//                        "email": email,
-//                        "password": password,
-//                        "uid": self.current_admin_uid,
-//                        "profileUIimage": url.absoluteString,
-
+                        "email": email,
+                        "name": name,
+                        "password": "Only you know",
+                        "uid": uid,
+                        "profileUIimage": profileUIimage?.absoluteString,
                     ]
-                    Firestore.firestore().collection("admins").document(user.uid).setData(userData) { error in
+                    
+                    self.currentUser_uid = user.uid
+                    Firestore.firestore().collection("admins").document(self.currentUser_uid).setData(userData as [String : Any]) { error in
                         if let error = error {
                             self.progressBar_rolling = false
                             print("Error storing user data: \(error.localizedDescription)")
                         } else {
                             print("User data stored successfully")
+                            DispatchQueue.main.async {
+                                print("Progressbar false 1")
+                                self.signedIn = true
+                                self.progressBar_rolling = false
+                            }
                         }
                     }
-                    //self.fetchUsers()
-                    //print(user)
                 }
-                
-                
-                //self.progressBar_rolling = false
             }
     }
+    
+    
+    
+    //MARK: not working the progress bar
     func admin_signOut() {
         //show progress view after logging out
         do {
             try Auth.auth().signOut()
-            self.isUserLoggedIn = false
+            //self.isUserLoggedIn = false
+            self.signedIn = false
             print("User logged out successfully")
             
         } catch let error as NSError {
@@ -274,39 +294,79 @@ import FirebaseStorage
     
     
     //MARK: User Authentication.
-    func validate_user(email: String, secretCode: String, completion: @escaping (Bool) ->() ) {
-        let email = email // email
+    func validate_user(email: String, secretCode: String, completion: @escaping (Bool) -> ()) {
+        //self.progressBar_rolling = true
         
         // Query the "users" collection for a document with the specified email address
-        Firestore.firestore().collection("admins").whereField("email", isEqualTo: email).getDocuments { (querySnapshot, error) in
-            if let error = error {
-                print("Error fetching user document: \(error.localizedDescription)")
+        fireStore.collection("admins").whereField("email", isEqualTo: email).getDocuments { (querySnapshot, error) in
+            guard error == nil else {
+                self.progressBar_rolling = false
+                print("Error fetching user document: \(error!.localizedDescription)")
                 completion(false)
-            } else if let snapshot = querySnapshot, !snapshot.documents.isEmpty {
-                // User document exists
-                let uid = snapshot.documents[0].documentID
-                if secretCode == uid {
-                    print("User exists with secretCode: \(uid)")
-                    self.isUserLoggedIn = true
-                    self.currentUser_email = email
-                    //self.fetchUsers()
-                    completion(true)
-                } else {
-                    print("Secret Code is invalid")
-                }
-            } else {
+                return
+            }
+            
+            guard let snapshot = querySnapshot, !snapshot.documents.isEmpty else {
+                self.progressBar_rolling = false
                 // User document does not exist
                 print("No user exists with email: \(email)")
                 print("Email is invalid")
                 completion(false)
+                return
+            }
+            
+            // User document exists
+            let uid = snapshot.documents[0].documentID
+            if secretCode == uid {
+                print("User exists with secretCode: \(uid)")
+                self.currentUser_email = email
+                completion(true)
+            } else {
+                print("Secret Code is invalid")
+                self.progressBar_rolling = false
+                completion(false)
             }
         }
     }
+
+//    func validate_user(email: String, secretCode: String, completion: @escaping (Bool) ->() ) {
+//        self.progressBar_rolling = true
+//
+//        // Query the "users" collection for a document with the specified email address
+//        fireStore.collection("admins").whereField("email", isEqualTo: email).getDocuments { (querySnapshot, error) in
+//            if let error = error {
+//                self.progressBar_rolling = true
+//                print("Error fetching user document: \(error.localizedDescription)")
+//                completion(false)
+//            } else if let snapshot = querySnapshot, !snapshot.documents.isEmpty {
+//                // User document exists
+//                let uid = snapshot.documents[0].documentID
+//                if secretCode == uid {
+//                    print("User exists with secretCode: \(uid)")
+//                    //self.isUserLoggedIn = true
+//                    self.signedIn = true
+//                    self.currentUser_email = email
+//                    //self.fetchUsers()
+//                    completion(true)
+//                } else {
+//                    print("Secret Code is invalid")
+//                }
+//            } else {
+//                // User document does not exist
+//                print("No user exists with email: \(email)")
+//                print("Email is invalid")
+//                completion(false)
+//            }
+//        }
+//    }
+    
+    
     func user_signOut() {
         //show progress view after logging out
         do {
             try Auth.auth().signOut()
-            self.isUserLoggedIn = false
+            //self.isUserLoggedIn = false
+            self.signedIn = true
             print("User logged out successfully")
             
         } catch let error as NSError {

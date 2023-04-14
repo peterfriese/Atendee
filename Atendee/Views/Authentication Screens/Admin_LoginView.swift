@@ -16,17 +16,21 @@ struct Admin_LoginView: View {
     @EnvironmentObject var userAdmin_vm: Authentication_AdminUser_VM
     @State private var isLoginView = false
     let router: AnyRouter
+    let roundedCornerButtonColor = Color("roundedLineColor").opacity(0.3)
+
     
     var body: some View {
         NavigationView {
-            if userAdmin_vm.isUserLoggedIn {
+            if userAdmin_vm.signedIn {
                 MainView()
             } else {
                 loginView
             }
         }
-        //.navigationBarBackButtonHidden(true)
         .toolbarRole(.editor)
+        .onAppear {
+            userAdmin_vm.signedIn = userAdmin_vm.isUserSignedIn
+        }
     }
     
     var loginView: some View {
@@ -50,10 +54,10 @@ struct Admin_LoginView: View {
                 
                 //MARK: The Textfields.
                 //textfeilds
-                ReUsable_TextFeild(imageName: "envelope.fill", title: "Enter your email here...", text: $userAdmin_vm.email, borderColor: .white.opacity(0.5))
+                ReUsable_TextFeild(imageName: "envelope.fill", title: "Enter your email here...", text: $userAdmin_vm.email, borderColor: roundedCornerButtonColor)
                     .padding(.vertical)
                 
-                ReUsable_TextFeild(imageName: "lock.fill", title: "Enter your password here...", text: $userAdmin_vm.password, borderColor: .white.opacity(0.5))
+                ReUsable_TextFeild(imageName: "lock.fill", title: "Enter your password here...", text: $userAdmin_vm.password, borderColor: roundedCornerButtonColor)
                     //.padding(.vertical)
                 
                 //MARK: forgot button.
@@ -87,11 +91,8 @@ struct Admin_LoginView: View {
                     HStack(spacing: 5) {
                         //MARK: Google sign in.
                         Sign_inWith_Button(title: "Sign in with", image: "g.circle", onClick: {
-//                            userAdmin_vm.progressBar_rolling = true
                             userAdmin_vm.admin_signInWithGoogle()
-                            userAdmin_vm.progressBar_rolling = true
                         })
-                        
                         Sign_inWith_Button(title: "Sign In with", image: "apple.logo") {
                         }
                     }
@@ -144,6 +145,8 @@ struct Admin_LoginView: View {
                             }
                         }
                 }
+            } else {
+                //Text("Nothing")
             }
             
             
@@ -157,6 +160,7 @@ struct Admin_LoginView_Previews: PreviewProvider {
         RouterView { router in
             Admin_LoginView(router: router)
                 .environmentObject(Authentication_AdminUser_VM())
+                .environmentObject(UserData_VM())
         }
     }
 }
