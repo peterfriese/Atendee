@@ -67,7 +67,7 @@ struct Add_UserView: View {
     @State private var isShowingImagePciker = false
     @Environment(\.dismiss) var dismiss
     @State var image: UIImage?
-    @State var isImageSelected: Bool = false
+    //@State var isImageSelected: Bool = false
     
     let roundedCornerButtonColor = Color("roundedLineColor").opacity(0.3)
 
@@ -83,7 +83,6 @@ struct Add_UserView: View {
                     VStack(spacing: 20) {
                         
                         firstHalfView
-                            //.padding(.horizontal)
                         
                         HStack {
                             Text("Monthly Fees")
@@ -92,33 +91,36 @@ struct Add_UserView: View {
                         }.padding(.top)
                         
                         SecondHalfView
-                            //.padding(.horizontal)
-                            
-                        
                         
                         ReUsable_Button(
                             title: "Save",
                             buttonBackgroundColor: validat_AddView ? Color("softbutton_Color") : Color("softbutton_Color").opacity(0.5)) {
-                            if let wrappedImage = image {
-                                if let imageData = wrappedImage.jpegData(compressionQuality: 0.5) {
-                                    userAdmin_vm.progressBar_rolling = true
-                                    //userAdmin_vm.saveImage(imageName: "imageName", image: wrappedImage)
-                                    userData_vm.addUser(
-                                        name: name,
-                                        serialNo: serialNo,
-                                        profileUIimage: imageData,
-                                        userAdding_date: userAdding_date,
-                                        userContact: userContact
-                                    )
-                                    userData_vm.getUsers()
+                                if let wrappedImage = image {
+                                    if let imageData = wrappedImage.jpegData(compressionQuality: 0.5) {
+                                        userAdmin_vm.progressBar_rolling = true
+                                        //userAdmin_vm.saveImage(imageName: "imageName", image: wrappedImage)
+                                        userData_vm.addUser(
+                                            name: name,
+                                            serialNo: serialNo,
+                                            profileUIimage: imageData,
+                                            userAdding_date: userAdding_date,
+                                            userContact: userContact
+                                        ) { isCompleted in
+                                            if isCompleted {
+                                                self.dismiss()
+                                                userAdmin_vm.progressBar_rolling = false
+                                            } else {
+                                                
+                                            }
+                                        }
+                                        //userData_vm.getUsers()
+                                        
+                                        //if userAdmin_vm.progressBar_rolling {
+                                            //self.dismiss()
+                                        //}
+                                        
+                                    }
                                 }
-                            }
-                            
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                                //user_vm.fetchUsers()//
-                                isImageSelected = false
-                                self.dismiss()
-                            }
                         }
                         .disabled(!validat_AddView)
                         
@@ -130,11 +132,41 @@ struct Add_UserView: View {
                     .navigationBarTitleDisplayMode(.inline)
                     .sheet(isPresented: $isShowingImagePciker) {
                         ImagePicker2(image: $image)
-                        //.environmentObject(user_vm.moc) //try this as well
                     }
                     
                     
                     progresBar
+                }
+                
+                
+                //progress View
+                // MARK: The progress bar when user click on the save button
+                if userAdmin_vm.progressBar_rolling {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 0)
+                            .fill(Material.ultraThin)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .ignoresSafeArea()
+                        
+                        
+                        RoundedRectangle(cornerRadius: 8)
+                            //.fill(Material.ultraThin)
+                            .fill(Color.green)
+                            .frame(width: 125, height: 125)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                            .overlay {
+                                VStack(spacing: 15) {
+                                    Spacer()
+                                    ProgressView()
+                                    //Spacer()
+                                    Text("Logging...")
+                                    Spacer()
+                                }
+                            }
+                    }
+                } else {
+                    //Text("Nothing")
                 }
                 
             }
@@ -176,7 +208,6 @@ struct Add_UserView: View {
                 imageName: "person.fill",
                 title: "User name",
                 text: $name, borderColor: roundedCornerButtonColor)
-            //.frame(width: .infinity)
             
             
             HStack(spacing: 10) {
@@ -184,17 +215,15 @@ struct Add_UserView: View {
                     imageName: "person.fill",
                     title: "Father name",
                     text: $fName, borderColor: roundedCornerButtonColor)
-                //.frame(width: .infinity)
+                
                 
                 //MARK: IT IS NUMBER. Adjust accordingly.
                 ReUsable_TextFeild(
                     imageName: "key.fill",
-                    title: "Serial No",
+                    title: "SNo: A22",
                     text: $serialNo, borderColor: roundedCornerButtonColor)
                 .frame(width: 135)
                 .keyboardType(.numberPad)
-                //.frame(width: 150)
-                
             }
             
             
@@ -216,8 +245,6 @@ struct Add_UserView: View {
                 .frame(width: 135)
                 .overlay {
                     DatePicker("", selection: $userAdding_date, in: ...Date.now, displayedComponents: .date)
-                        //.frame(width: 200, height: 200)
-                        //.scaleEffect(0.8)
                         .padding(.trailing, 8)
                 }
                 

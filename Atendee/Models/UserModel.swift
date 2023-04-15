@@ -15,11 +15,9 @@ struct User: Identifiable, Codable {
     var profileUIimage: URL?
     let userAdding_date: Date
     let userContact: String
-    
-    
+}
 //    var timeAgo: String {
 //        let formatter = RelativeDateTimeFormatter()
 //        formatter.unitsStyle = .abbreviated
 //        return formatter.localizedString(for: userAdding_date, relativeTo: Date())
 //    }
-}

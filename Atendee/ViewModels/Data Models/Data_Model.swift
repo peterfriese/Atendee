@@ -34,7 +34,9 @@ import FirebaseStorage
     let fileName = "testing_09"
     
     
-    func addUser(name: String, serialNo: String, profileUIimage: Data, userAdding_date: Date, userContact: String) {
+    func addUser(name: String, serialNo: String, profileUIimage: Data, userAdding_date: Date, userContact: String, completion: @escaping (Bool) -> ()) {
+        self.progressBar_rolling = true
+        
         //we need set the path for the Firebase Storage reference, which means that it needs to be unique to ensure that each file uploaded to Firebase Storage has a unique path.
         let storageRef = self.fireStorage.reference(withPath: serialNo)
         
@@ -44,6 +46,7 @@ import FirebaseStorage
             if let error = error {
                 self.error_Message = "Error uploading image: \(error.localizedDescription)"
                 self.progressBar_rolling = false
+                completion(false)
                 return
             }//error during the uploading.
             
@@ -63,6 +66,7 @@ import FirebaseStorage
                         if let error = error {
                             self.error_Message = "Error storing user data: \(error.localizedDescription)"
                             self.progressBar_rolling = false
+                            completion(false)
                             print("error while saving user to firestore")
                             return
                         }
@@ -70,11 +74,17 @@ import FirebaseStorage
                         self.error_Message = "User data stored successfully"
                         //self.newMessage = self.currentUser_email
                         self.progressBar_rolling = false
+                        DispatchQueue.main.async {
+                            self.getUsers()
+                        }
+                        
+                        completion(true)
                     }
                     
                 case .failure(let error):
                     self.error_Message = "Error retrieving download URL: \(error.localizedDescription)"
                     self.progressBar_rolling = false
+                    completion(false)
                 }
             }
         }

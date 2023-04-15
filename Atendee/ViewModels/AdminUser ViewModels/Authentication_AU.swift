@@ -52,6 +52,7 @@ import FirebaseStorage
         return Auth.auth().currentUser != nil
     }
     
+    let data_model_vm = UserData_VM()
     
     
     
@@ -167,6 +168,7 @@ import FirebaseStorage
                 self?.signedIn = true
             }
             
+            //zarori hai
             self?.currentUser_email = Auth.auth().currentUser?.email ?? "UnknownUser_email"
             //updated
             self?.current_admin_uid = Auth.auth().currentUser?.uid ?? "Unknown currentUser_uid"
@@ -179,6 +181,8 @@ import FirebaseStorage
             }
         }
     }
+    
+    
     func validateEmail_Password_adminLogin() {
         guard !email.isEmpty && !password.isEmpty else {
             return

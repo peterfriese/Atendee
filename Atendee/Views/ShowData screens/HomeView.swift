@@ -96,36 +96,9 @@ struct HomeView: View {
                         Add_UserView()
                     }
                 }
-                
-                if userAdmin_vm.progressBar_rolling {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 0)
-                            .fill(Material.ultraThin)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .ignoresSafeArea()
-                        
-                        
-                        RoundedRectangle(cornerRadius: 8)
-                            //.fill(Material.ultraThin)
-                            .fill(Color.green)
-                            .frame(width: 125, height: 125)
-                            .foregroundColor(.white)
-                            .cornerRadius(8)
-                            .overlay {
-                                VStack(spacing: 15) {
-                                    Spacer()
-                                    ProgressView()
-                                    //Spacer()
-                                    Text("Logging...")
-                                    Spacer()
-                                }
-                            }
-                    }
-                } else {
-                    //Text("Nothing")
-                }
             }
         }
+        //MARK: i want to fetch when the admin is correctly authenticated and signing in.
         .onAppear {
             userData_vm.fetchUsers2()
         }

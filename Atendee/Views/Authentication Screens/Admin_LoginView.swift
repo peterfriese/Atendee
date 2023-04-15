@@ -53,12 +53,11 @@ struct Admin_LoginView: View {
                 
                 
                 //MARK: The Textfields.
-                //textfeilds
                 ReUsable_TextFeild(imageName: "envelope.fill", title: "Enter your email here...", text: $userAdmin_vm.email, borderColor: roundedCornerButtonColor)
                     .padding(.vertical)
                 
                 ReUsable_TextFeild(imageName: "lock.fill", title: "Enter your password here...", text: $userAdmin_vm.password, borderColor: roundedCornerButtonColor)
-                    //.padding(.vertical)
+                
                 
                 //MARK: forgot button.
                 HStack {
