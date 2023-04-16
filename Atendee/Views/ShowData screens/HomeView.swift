@@ -34,17 +34,20 @@ struct HomeView: View {
                         Text(userAdmin_vm.newMessage)
                             .foregroundColor(.red)
                         
-                        Button("Check FM Admin") {
-                            userData_vm.getAdmin()
+                        Button("Check FM Users") {
+                            userData_vm.getUsers()
                         }
                         .padding()
                         .buttonStyle(.borderedProminent)
+                        .foregroundColor(.green)
                         
-                        Button("Fetch admin and save to FM") {
-                            userData_vm.fetch_Admins2()
+                        Button("Delete Users!") {
+                            //userData_vm.deletFM_Users2()
+                            userData_vm.deleteUsers()
                         }
                         .padding()
                         .buttonStyle(.borderedProminent)
+                        .foregroundColor(.red)
                         
                         ForEach(filteredList) { user in
                             HStack {
@@ -60,15 +63,15 @@ struct HomeView: View {
                                 
                                 VStack {
                                     Text(user.name)
-                                    Text(user.userContact)
+                                    Text(user.id)
                                 }
                                 Text(user.serialNo)
                                 Text(user.userAdding_date, formatter: dateFormatter)
                             }
+                            .onLongPressGesture {
+                                userData_vm.deleteUser(uid: user.id)
+                            }
                         }
-                    }
-                    .onAppear() {
-                        print("here is a user email from homeView: \(userAdmin_vm.currentUser_email)")
                     }
                     .navigationTitle("Users")
                     //.navigationBarTitleDisplayMode(.inline)
@@ -100,6 +103,7 @@ struct HomeView: View {
         }
         //MARK: i want to fetch when the admin is correctly authenticated and signing in.
         .onAppear {
+            print("here is a user email from homeView: \(userAdmin_vm.currentUser_email)")
             userData_vm.fetchUsers2()
         }
             

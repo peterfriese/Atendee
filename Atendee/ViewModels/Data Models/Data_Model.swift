@@ -91,6 +91,7 @@ import FirebaseStorage
     }
     
     func fetchUsers2() {
+        print("Called again")
         //go to the specific collection, and then we put a listener. Local writes in your app will invoke snapshot listeners immediately. When you perform a write, your listeners will be notified with the new data before the data is sent to the backend.
         fireStore.collection(self.currentUser_email).addSnapshotListener { snapShot, error in
             
@@ -126,10 +127,17 @@ import FirebaseStorage
             self.fileManager.saveUsers_toFM(self.users, fileName: "test2")
         }
     }
+    
     func getUsers() {
         guard let users = fileManager.getUsers_fromFM(fileName: "test2") else { return }
         self.users = users
         print("All FM users are: \(users)")
+    }
+    
+    func deletFM_Users2() {
+        //Dete all those user at that fileName.
+        fileManager.delete_FM_Users(fileName: "test2")
+        getUsers()
     }
     
     
@@ -174,6 +182,31 @@ import FirebaseStorage
         }
         self.admin = admin
         print(admin)
+    }
+    
+    
+    //delete all users
+    func deleteUsers() {
+        fireStore.collection(self.currentUser_email).getDocuments { snapShot, error in
+            if let error = error {
+                print("Error deleting all users:\(error)")
+            }
+            
+            for doc in snapShot?.documents ?? [] {
+                doc.reference.delete()
+            }
+        }
+    }
+    
+    //delete a sinlge user by the id
+    func deleteUser(uid:  String) {
+        fireStore.collection(self.currentUser_email).document(uid).delete() { error in
+            if let error = error {
+                print("Error deleting a single user: \(error)")
+            }
+            
+            print("User Deleted successfully with uid of: \(uid)")
+        }
     }
 }
 //}

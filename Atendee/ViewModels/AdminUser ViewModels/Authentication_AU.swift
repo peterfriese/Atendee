@@ -30,10 +30,6 @@ import FirebaseStorage
     @AppStorage("currentUser_uid") var currentUser_uid = "Unknow_uid"
     @AppStorage("current_admin_uid") var current_admin_uid = "Unknow_admin_uid"
     
-//    init() {
-//        fetchUsers2()
-//    }
-    
     let fireStore = Firestore.firestore()
     let fireStorage = Storage.storage()
     
@@ -332,37 +328,6 @@ import FirebaseStorage
             }
         }
     }
-
-//    func validate_user(email: String, secretCode: String, completion: @escaping (Bool) ->() ) {
-//        self.progressBar_rolling = true
-//
-//        // Query the "users" collection for a document with the specified email address
-//        fireStore.collection("admins").whereField("email", isEqualTo: email).getDocuments { (querySnapshot, error) in
-//            if let error = error {
-//                self.progressBar_rolling = true
-//                print("Error fetching user document: \(error.localizedDescription)")
-//                completion(false)
-//            } else if let snapshot = querySnapshot, !snapshot.documents.isEmpty {
-//                // User document exists
-//                let uid = snapshot.documents[0].documentID
-//                if secretCode == uid {
-//                    print("User exists with secretCode: \(uid)")
-//                    //self.isUserLoggedIn = true
-//                    self.signedIn = true
-//                    self.currentUser_email = email
-//                    //self.fetchUsers()
-//                    completion(true)
-//                } else {
-//                    print("Secret Code is invalid")
-//                }
-//            } else {
-//                // User document does not exist
-//                print("No user exists with email: \(email)")
-//                print("Email is invalid")
-//                completion(false)
-//            }
-//        }
-//    }
     
     
     func user_signOut() {
@@ -1181,6 +1146,40 @@ import FirebaseStorage
      }
      self.progressBar_rolling = false
  }
+ 
+ 
+ 
+ 
+ //    func validate_user(email: String, secretCode: String, completion: @escaping (Bool) ->() ) {
+ //        self.progressBar_rolling = true
+ //
+ //        // Query the "users" collection for a document with the specified email address
+ //        fireStore.collection("admins").whereField("email", isEqualTo: email).getDocuments { (querySnapshot, error) in
+ //            if let error = error {
+ //                self.progressBar_rolling = true
+ //                print("Error fetching user document: \(error.localizedDescription)")
+ //                completion(false)
+ //            } else if let snapshot = querySnapshot, !snapshot.documents.isEmpty {
+ //                // User document exists
+ //                let uid = snapshot.documents[0].documentID
+ //                if secretCode == uid {
+ //                    print("User exists with secretCode: \(uid)")
+ //                    //self.isUserLoggedIn = true
+ //                    self.signedIn = true
+ //                    self.currentUser_email = email
+ //                    //self.fetchUsers()
+ //                    completion(true)
+ //                } else {
+ //                    print("Secret Code is invalid")
+ //                }
+ //            } else {
+ //                // User document does not exist
+ //                print("No user exists with email: \(email)")
+ //                print("Email is invalid")
+ //                completion(false)
+ //            }
+ //        }
+ //    }
 
  */
 

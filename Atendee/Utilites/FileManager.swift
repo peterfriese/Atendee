@@ -8,90 +8,13 @@
 import Foundation
 import SwiftUI
 
-class MyFileManager {
-    let encoder = JSONEncoder()
-    let decoder = JSONDecoder()
-    
-    func saveUsers(users: [User], fileName: String) {
-        //get the url for the directory.
-        guard let fileUrl = getURL_path(fileName: fileName) else { return }
-        
-        
-        //encode the user objects, into data object and then write the data into the disk
-        do {
-            guard let userData = try? encoder.encode(users) else {
-                print("Can not encode userData")
-                return
-            }
-            
-            try userData.write(to: fileUrl, options: .atomic)
-        } catch {
-            print("Error")
-        }
-        
-        
-    }
-    
-    func getUsers(fileName: String) -> [User]? {
-        //get the url for the directory.
-        guard let fileUrl = getURL_path(fileName: fileName) else { return nil }
-        
-        
-        
-        //decode the data object, into user objects and then returned.
-        do {
-            guard let userData = try? Data(contentsOf: fileUrl, options: .mappedIfSafe) else { return nil }
-            
-            guard let users = try? decoder.decode([User].self, from: userData) else {
-                print("Oh sorry! Can not decode the userData.")
-                return nil
-            }
-            
-            return users
-            
-        } catch {
-            print("Can not decode the data!")
-        }
-    }
-    
-    
-    func getURL_path(fileName: String) -> URL? {
-        guard let docDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return nil }
-        
-        let url = docDirectory.appendingPathComponent(fileName)
-        
-        return url
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //✅
 class FileManagerClass {
     let encoder = JSONEncoder()
     let decoder = JSONDecoder()
     
+    
+    //handle Users in FM
     func saveUsers_toFM(_ data: [User], fileName: String) {
         //get the url for the folder we want to save data in...
         guard let fileURL = getFilePathURL(fileName: fileName) else { return }
@@ -133,6 +56,7 @@ class FileManagerClass {
     }
     
     
+    //handle Users in FM
     func saveAdmin_toFM(_ data: Admin, fileName: String) {
         //get the url for the folder we want to save data in...
         guard let fileURL = getFilePathURL(fileName: fileName) else { return }
@@ -172,7 +96,37 @@ class FileManagerClass {
             return nil
         }
     }
+
     
+    //for deletion...
+    func delete_FM_Users(fileName: String) {
+        // Get the URL for the directory where the users are saved
+        guard let fileUrl = getFilePathURL(fileName: fileName) else { return }
+
+        do {
+            // Load the saved users from the file
+            var savedUsers = getUsers_fromFM(fileName: fileName) ?? []
+
+            // Remove the users to be deleted from the saved users array
+//            savedUsers.removeAll { savedUser in
+//                return users.contains { $0.id == savedUser.id }
+//            }
+            
+            savedUsers.removeAll()
+            print("Deleted successfully: savedUsers are: \(savedUsers)")
+
+            // Encode the updated users array into data
+            let updatedUserData = try encoder.encode(savedUsers)
+
+            // Write the updated data back to the file
+            try updatedUserData.write(to: fileUrl, options: .atomic)
+
+            print("Users deleted successfully.")
+        } catch {
+            print("Error deleting users: \(error.localizedDescription)")
+        }
+    }
+
     
     
     private func getFilePathURL(fileName: String) -> URL? {
@@ -196,131 +150,234 @@ class FileManagerClass {
 
 
 //For Reuse. It tries to save image.
-class Local_FileManager2 {
-
-    static let instance = Local_FileManager2()
-
-    private init() { }
-
-
-    func saveData_to_FM(image: UIImage, imageName: String, folderName: String) {
-
-        //create folder:
-        createFolder_ifNeeded(folderName: folderName)
-
-        //get path for image.
-        guard
-            let data = image.jpegData(compressionQuality: 0.5),
-            let url = getUrl_forImage(imageName: imageName, folderName: folderName) else { return }
-
-
-        //Checks if file exists, removes it if so.
-//        if FileManager.default.fileExists(atPath: url.path) {
+//class Local_FileManager2 {
+//
+//    static let instance = Local_FileManager2()
+//
+//    private init() { }
+//
+//
+//    func saveData_to_FM(image: UIImage, imageName: String, folderName: String) {
+//
+//        //create folder:
+//        createFolder_ifNeeded(folderName: folderName)
+//
+//        //get path for image.
+//        guard
+//            let data = image.jpegData(compressionQuality: 0.5),
+//            let url = getUrl_forImage(imageName: imageName, folderName: folderName) else { return }
+//
+//
+//        //Checks if file exists, removes it if so.
+////        if FileManager.default.fileExists(atPath: url.path) {
+////            do {
+////                try FileManager.default.removeItem(atPath: url.path)
+////                print("Removed old image")
+////            } catch let removeError {
+////                print("couldn't remove file at path", removeError)
+////            }
+////        }
+//
+//        //save image to that path.
+//        do {
+//            try data.write(to: url)
+//        } catch {
+//            print("There was an error while saving data to FM. error: \(error) and image: \(imageName)")
+//        }
+//
+//    }
+//
+//    func getData_from_FM(imageName: String, folderName: String) -> UIImage? {
+//        guard
+//            let url = getUrl_forImage(imageName: imageName, folderName: folderName),
+//            FileManager.default.fileExists(atPath: url.path()) else { return nil }  //path.
+//
+//        return UIImage(contentsOfFile: url.path()) //path
+//    }
+//
+//    //create the folder for that particular url
+//    private func createFolder_ifNeeded(folderName: String) {
+//        //check the url exist
+//        guard let url = getUrl_forFolder(folderName: folderName) else { return }
+//
+//        //if not exist, then create it.
+//        if !FileManager.default.fileExists(atPath: url.path) {
 //            do {
-//                try FileManager.default.removeItem(atPath: url.path)
-//                print("Removed old image")
-//            } catch let removeError {
-//                print("couldn't remove file at path", removeError)
+//                try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+//            } catch let error {
+//                print("Folder can not be created for that url: \(error) and folderName: \(folderName)")
 //            }
 //        }
+//    }
+//
+//
+//    //get the url for the folder we want to save data in...
+//    private func getUrl_forFolder(folderName: String) -> URL? {
+//        guard let url = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else { return nil }
+//
+//        return url.appendingPathComponent(folderName)
+//    }
+//
+//    //now save the image in that particular folder.
+//    private func getUrl_forImage(imageName: String, folderName: String) -> URL? {
+//        guard let folder_url = getUrl_forFolder(folderName: folderName) else { return nil }
+//
+//        //if we get into that particular folder, then save the image
+//        return folder_url.appendingPathComponent(imageName + ".jpg")
+//    }
+//
+//
+//
+//    func saveImage(imageName: String, image: UIImage) {
+//        guard let documentsDirectory = FileManager
+//        .default
+//        .urls(for: .documentDirectory, in: .userDomainMask)
+//        .first else { return }
+//
+//        let fileName = imageName
+//        let fileURL = documentsDirectory.appendingPathComponent(fileName)
+//        guard let data = image.jpegData(compressionQuality: 1) else { return }
+//
+//        //Checks if file exists, removes it if so.
+////        if FileManager.default.fileExists(atPath: fileURL.path) {
+////            do {
+////                try FileManager.default.removeItem(atPath: fileURL.path)
+////                print("Removed old image")
+////            } catch let removeError {
+////                print("couldn't remove file at path", removeError)
+////            }
+////        }
+//
+//        do {
+//            try data.write(to: fileURL)
+//            print("Image has been stored in FM...")
+//        } catch let error {
+//            print("error saving file with error", error)
+//        }
+//
+//    }
+//
+//    func loadImageFromDiskWith(fileName: String) -> UIImage? {
+//
+//        if fileName.isEmpty {   //fileName.isReallyEmpty
+//            return nil
+//        }
+//
+//        let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
+//
+//        let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
+//        let paths = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
+//
+//        if let dirPath = paths.first {
+//            let imageUrl = URL(fileURLWithPath: dirPath).appendingPathComponent(fileName)
+//            let image = UIImage(contentsOfFile: imageUrl.path)
+//            return image
+//
+//        }
+//
+//        return nil
+//    }
+//}
 
-        //save image to that path.
+
+
+//for YT.
+class MyFileManager {
+    let encoder = JSONEncoder()
+    let decoder = JSONDecoder()
+
+    func saveUsers(users: [User], fileName: String) {
+        //get the url for the directory.
+        guard let fileUrl = getURL_path(fileName: fileName) else { return }
+
+
+        //encode the user objects, into data object and then write the data into the disk
         do {
-            try data.write(to: url)
+            guard let userData = try? encoder.encode(users) else {
+                print("Can not encode userData")
+                return
+            }
+
+            try userData.write(to: fileUrl, options: .atomic)
         } catch {
-            print("There was an error while saving data to FM. error: \(error) and image: \(imageName)")
+            print("Error")
         }
 
+
     }
 
-    func getData_from_FM(imageName: String, folderName: String) -> UIImage? {
-        guard
-            let url = getUrl_forImage(imageName: imageName, folderName: folderName),
-            FileManager.default.fileExists(atPath: url.path()) else { return nil }  //path.
+    func getUsers(fileName: String) -> [User]? {
+        //get the url for the directory.
+        guard let fileUrl = getURL_path(fileName: fileName) else { return nil }
 
-        return UIImage(contentsOfFile: url.path()) //path
+
+
+        //decode the data object, into user objects and then returned.
+        do {
+            guard let userData = try? Data(contentsOf: fileUrl, options: .mappedIfSafe) else { return nil }
+
+            guard let users = try? decoder.decode([User].self, from: userData) else {
+                print("Oh sorry! Can not decode the userData.")
+                return nil
+            }
+
+            return users
+
+        } catch {
+            print("Can not decode the data!")
+        }
     }
 
-    //create the folder for that particular url
-    private func createFolder_ifNeeded(folderName: String) {
-        //check the url exist
-        guard let url = getUrl_forFolder(folderName: folderName) else { return }
+    func delete_Users(fileName: String) {
+        //Check that the file exist
+        guard let fileUrl = getURL_path(fileName: fileName) else {
+            print("FileUrl path is not exist")
+            return
+        }
 
-        //if not exist, then create it.
-        if !FileManager.default.fileExists(atPath: url.path) {
+        //Checks if file exists, removes it if so.
+        if FileManager.default.fileExists(atPath: fileUrl.path()) {
             do {
-                try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
-            } catch let error {
-                print("Folder can not be created for that url: \(error) and folderName: \(folderName)")
+                try FileManager.default.removeItem(atPath: fileUrl.path())
+                print("Successfully removed old users")
+            } catch let removeError {
+                print("couldn't remove file at path", removeError)
             }
         }
     }
 
-
-    //get the url for the folder we want to save data in...
-    private func getUrl_forFolder(folderName: String) -> URL? {
-        guard let url = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else { return nil }
-
-        return url.appendingPathComponent(folderName)
-    }
-
-    //now save the image in that particular folder.
-    private func getUrl_forImage(imageName: String, folderName: String) -> URL? {
-        guard let folder_url = getUrl_forFolder(folderName: folderName) else { return nil }
-
-        //if we get into that particular folder, then save the image
-        return folder_url.appendingPathComponent(imageName + ".jpg")
-    }
-
-
-
-    func saveImage(imageName: String, image: UIImage) {
-        guard let documentsDirectory = FileManager
-        .default
-        .urls(for: .documentDirectory, in: .userDomainMask)
-        .first else { return }
-
-        let fileName = imageName
-        let fileURL = documentsDirectory.appendingPathComponent(fileName)
-        guard let data = image.jpegData(compressionQuality: 1) else { return }
-
-        //Checks if file exists, removes it if so.
-//        if FileManager.default.fileExists(atPath: fileURL.path) {
-//            do {
-//                try FileManager.default.removeItem(atPath: fileURL.path)
-//                print("Removed old image")
-//            } catch let removeError {
-//                print("couldn't remove file at path", removeError)
-//            }
-//        }
+    func delete_FM_Users(users: [User], fileName: String) {
+        // Get the URL for the directory where the users are saved
+        guard let fileUrl = getURL_path(fileName: fileName) else { return }
 
         do {
-            try data.write(to: fileURL)
-            print("Image has been stored in FM...")
-        } catch let error {
-            print("error saving file with error", error)
-        }
+            // Load the saved users from the file
+            var savedUsers = getUsers(fileName: fileName) ?? []
 
+            // Remove the users to be deleted from the saved users array
+            savedUsers.removeAll { savedUser in
+                return users.contains { $0.id == savedUser.id }
+            }
+
+            // Encode the updated users array into data
+            let updatedUserData = try encoder.encode(savedUsers)
+
+            // Write the updated data back to the file
+            try updatedUserData.write(to: fileUrl, options: .atomic)
+
+            print("Users deleted successfully.")
+        } catch {
+            print("Error deleting users: \(error.localizedDescription)")
+        }
     }
 
-    func loadImageFromDiskWith(fileName: String) -> UIImage? {
 
-        if fileName.isEmpty {   //fileName.isReallyEmpty
-            return nil
-        }
 
-        let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
+    func getURL_path(fileName: String) -> URL? {
+        guard let docDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return nil }
 
-        let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
-        let paths = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
+        let url = docDirectory.appendingPathComponent(fileName)
 
-        if let dirPath = paths.first {
-            let imageUrl = URL(fileURLWithPath: dirPath).appendingPathComponent(fileName)
-            let image = UIImage(contentsOfFile: imageUrl.path)
-            return image
-
-        }
-
-        return nil
+        return url
     }
 }
