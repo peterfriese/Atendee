@@ -68,10 +68,8 @@ struct HomeView: View {
                                 Text(user.serialNo)
                                 Text(user.userAdding_date, formatter: dateFormatter)
                             }
-                            .onLongPressGesture {
-                                userData_vm.deleteUser(uid: user.id)
-                            }
                         }
+                        //.onDelete(perform: userData_vm.deleteUsers)
                     }
                     .navigationTitle("Users")
                     //.navigationBarTitleDisplayMode(.inline)
@@ -112,6 +110,10 @@ struct HomeView: View {
     var filteredList: [User] {
         return userData_vm.users.sorted { $0.name < $1.name }
     }
+    
+//    func deleteUser(index: IndexSet) {
+//        return userData_vm.deleteUser(uid: index)
+//    }
 }
 
 struct HomeView_Previews: PreviewProvider {

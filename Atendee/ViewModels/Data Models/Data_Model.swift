@@ -134,11 +134,13 @@ import FirebaseStorage
         print("All FM users are: \(users)")
     }
     
-    func deletFM_Users2() {
-        //Dete all those user at that fileName.
-        fileManager.delete_FM_Users(fileName: "test2")
-        getUsers()
-    }
+    
+    //MARK: No Need of this. Becuase when we delete the users from firebase, the FM will be updated accordingly.
+//    func deletFM_Users2() {
+//        //Dete all those user at that fileName.
+//        fileManager.delete_FM_Users(fileName: "test2")
+//        getUsers()
+//    }
     
     
     func fetch_Admins2() {

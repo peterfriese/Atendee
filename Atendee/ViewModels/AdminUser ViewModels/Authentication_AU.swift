@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Authentication_AdminUser_VM.swift
 //  Atendee
 //
 //  Created by Muhammad Farid Ullah on 03/04/2023.
@@ -48,7 +48,7 @@ import FirebaseStorage
         return Auth.auth().currentUser != nil
     }
     
-    let data_model_vm = UserData_VM()
+    let userData_vm = UserData_VM()
     
     
     
@@ -279,10 +279,15 @@ import FirebaseStorage
     func admin_signOut() {
         //show progress view after logging out
         do {
+            //MARK: Delete the user data from the fireStore. It will erase the FM Data too.
+            userData_vm.deleteUsers() //use completion handler so that we do not sign out untill the data is succesfully erased. then sign out.
+            
             try Auth.auth().signOut()
             //self.isUserLoggedIn = false
             self.signedIn = false
             print("User logged out successfully")
+            
+            
             
         } catch let error as NSError {
             print("There was an error while signing Out! \(error)")
