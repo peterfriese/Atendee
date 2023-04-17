@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import Firebase
 import FirebaseFirestore
+import FirebaseFirestoreSwift
 import GoogleSignIn
 import FirebaseStorage
 
@@ -35,61 +36,35 @@ let userfileName = "userTest1"
 let adminfileName = "adminTest1"
 
 
-func addUser(name: String, serialNo: String, profileUIimage: Data, userAdding_date: Date, userContact: String, completion: @escaping (Bool) -> ()) {
-    self.progressBar_rolling = true
-    
-    //we need set the path for the Firebase Storage reference, which means that it needs to be unique to ensure that each file uploaded to Firebase Storage has a unique path.
-    let storageRef = self.fireStorage.reference(withPath: serialNo)
-    
-    
-    //upload the user's profile image to Firebase Storage.
-    storageRef.putData(profileUIimage, metadata: nil) { metaData, error in
-        if let error = error {
-            self.error_Message = "Error uploading image: \(error.localizedDescription)"
+    func addUser(name: String, serialNo: String, profileUIimage: Data, userAdding_date: Date, userContact: String) async -> Bool {
+        self.progressBar_rolling = true
+
+        // Instead of using the user's email address, you should:
+        // 0. import FirebaseFirestoreSwift
+        // 1. store *all* user documents in a collection called "users"
+        // 2. let Firestore create a unique document ID for you (by calling `.addDocument(from: user)`
+        do {
+            let storageRef = self.fireStorage.reference(withPath: serialNo)
+            let _ = try await storageRef.putDataAsync(profileUIimage)
+            let profileImageURL = try await storageRef.downloadURL()
+
+            let  user = User(name: name,
+                             serialNo: serialNo,
+                             profileUIimage: profileImageURL,
+                             userAdding_date: Date(),
+                             userContact: userContact) // <-- you should probably also use the user's UID to set the userId field
+            let _ = try self.fireStore.collection("users").addDocument(from: user)
+
+            self.error_Message = "User data stored successfully"
             self.progressBar_rolling = false
-            completion(false)
-            return
-        }//error during the uploading.
-        
-        //as we have uploaded the user profileImage, now we need to download its url so that we add this profileImage to the document as well with the name and serialNo.
-        storageRef.downloadURL { result in
-            switch result {
-            case .success(let url):
-                let userData: [String: Any] = [
-                    "name": name,
-                    "serialNo": serialNo,
-                    "profileUIimage": url.absoluteString,
-                    "userAdding_date": userAdding_date,
-                    "userContact": userContact
-                ]
-                
-                self.fireStore.collection(self.currentUser_email).addDocument(data: userData) { error in
-                    if let error = error {
-                        self.error_Message = "Error storing user data: \(error.localizedDescription)"
-                        self.progressBar_rolling = false
-                        completion(false)
-                        print("error while saving user to firestore")
-                        return
-                    }
-                    
-                    self.error_Message = "User data stored successfully"
-                    //self.newMessage = self.currentUser_email
-                    self.progressBar_rolling = false
-                    DispatchQueue.main.async {
-                        self.getUsers()
-                    }
-                    
-                    completion(true)
-                }
-                
-            case .failure(let error):
-                self.error_Message = "Error retrieving download URL: \(error.localizedDescription)"
-                self.progressBar_rolling = false
-                completion(false)
-            }
+            return true
+        }
+        catch {
+            self.error_Message = "Error storing user data: \(error.localizedDescription)"
+            self.progressBar_rolling = false
+            return false
         }
     }
-}
 
 func fetchUsers2() {
     print("Called again")

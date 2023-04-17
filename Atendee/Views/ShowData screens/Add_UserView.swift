@@ -98,21 +98,18 @@ struct Add_UserView: View {
                                 if let wrappedImage = image {
                                     if let imageData = wrappedImage.jpegData(compressionQuality: 0.5) {
                                         userAdmin_vm.progressBar_rolling = true
-                                        //userAdmin_vm.saveImage(imageName: "imageName", image: wrappedImage)
-                                        userData_vm.addUser(
-                                            name: name,
-                                            serialNo: serialNo,
-                                            profileUIimage: imageData,
-                                            userAdding_date: userAdding_date,
-                                            userContact: userContact
-                                        ) { isCompleted in
-                                            if isCompleted {
+                                        Task {
+                                            let result = await userData_vm.addUser(name: name,
+                                                                                   serialNo: serialNo,
+                                                                                   profileUIimage: imageData,
+                                                                                   userAdding_date: userAdding_date,
+                                                                                   userContact: userContact)
+                                            if result {
                                                 self.dismiss()
                                                 userAdmin_vm.progressBar_rolling = false
-                                            } else {
-                                                
                                             }
                                         }
+
                                         //userData_vm.getUsers()
                                         
                                         //if userAdmin_vm.progressBar_rolling {
