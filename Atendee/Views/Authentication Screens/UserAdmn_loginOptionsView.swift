@@ -18,6 +18,9 @@ struct UserAdmn_loginOptionsView: View {
             Two_optionsView
         }
         .toolbarRole(.editor)
+        .onAppear {
+            userAdmin_vm.signedIn = userAdmin_vm.isUserSignedIn
+        }
     }
     
     var Two_optionsView: some View {
@@ -57,6 +60,9 @@ struct UserAdmn_loginOptionsView: View {
                 Spacer()
             }
             .padding(.horizontal)
+        }
+        .onAppear {
+            userAdmin_vm.signedIn = userAdmin_vm.isUserSignedIn
         }
     }
     

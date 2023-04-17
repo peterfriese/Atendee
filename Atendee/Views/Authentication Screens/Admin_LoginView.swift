@@ -28,9 +28,9 @@ struct Admin_LoginView: View {
             }
         }
         .toolbarRole(.editor)
-        .onAppear {
-            userAdmin_vm.signedIn = userAdmin_vm.isUserSignedIn
-        }
+//        .onAppear {
+//            userAdmin_vm.signedIn = userAdmin_vm.isUserSignedIn
+//        }
     }
     
     var loginView: some View {

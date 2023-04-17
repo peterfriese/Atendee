@@ -153,28 +153,28 @@ import FirebaseStorage
     func admin_Login() {
         self.progressBar_rolling = true
         Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
-            if error != nil {
-                print("There was an error while login...\(String(describing: error?.localizedDescription))")
-                self?.error_Message = String(describing: error?.localizedDescription)
+            if let error = error {
+                print("There was an error while login...\(String(describing: error.localizedDescription))")
+                self?.error_Message = String(describing: error.localizedDescription)
                 self?.progressBar_rolling = false
                 //self?.isUserLoggedIn = false
-                self?.signedIn = true
-            }
-            
-            //zarori hai
-            self?.currentUser_email = Auth.auth().currentUser?.email ?? "UnknownUser_email"
-            //updated
-            self?.current_admin_uid = Auth.auth().currentUser?.uid ?? "Unknown currentUser_uid"
-            //self.fetchUsers()
-            
-            //trin this to load the users and admin data.
-            self?.userData_vm.fetch_Admins2()
-            self?.userData_vm.fetch_Admins2()
-            
-            DispatchQueue.main.async {
-                print("logged in 2")
-                self?.progressBar_rolling = false
-                self?.signedIn = true
+                self?.signedIn = false
+            } else {
+                //zarori hai
+                self?.currentUser_email = Auth.auth().currentUser?.email ?? "UnknownUser_email"
+                //updated
+                self?.current_admin_uid = Auth.auth().currentUser?.uid ?? "Unknown currentUser_uid"
+                //self.fetchUsers()
+                
+                //trin this to load the users and admin data.
+                self?.userData_vm.fetch_Admins2()
+                self?.userData_vm.fetch_Admins2()
+                
+                DispatchQueue.main.async {
+                    print("logged in 2")
+                    self?.progressBar_rolling = false
+                    self?.signedIn = true
+                }
             }
         }
     }
