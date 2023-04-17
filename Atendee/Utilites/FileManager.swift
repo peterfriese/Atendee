@@ -98,7 +98,7 @@ class FileManagerClass {
     }
 
     
-    //for deletion...
+    //for deleting the users data...
     func delete_FM_Users(fileName: String) {
         // Get the URL for the directory where the users are saved
         guard let fileUrl = getFilePathURL(fileName: fileName) else { return }
@@ -126,7 +126,23 @@ class FileManagerClass {
             print("Error deleting users: \(error.localizedDescription)")
         }
     }
-
+    
+    //For deleting the admin data
+    func deleteFM_admin(fileName: String) {
+        guard
+            let fileUrl_path = getFilePathURL(fileName: fileName),
+            FileManager.default.fileExists(atPath: fileUrl_path.path()) else {
+            print("Error getting path for deleting the admin data")
+            return
+        }
+        
+        do {
+            try FileManager.default.removeItem(at: fileUrl_path)
+            print("Admin data deleted from the FM")
+        } catch {
+            print("Error deleting admin data...")
+        }
+    }
     
     
     private func getFilePathURL(fileName: String) -> URL? {

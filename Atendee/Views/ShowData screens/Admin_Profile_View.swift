@@ -16,31 +16,36 @@ struct Admin_Profile_View: View {
     @State private var image: UIImage?
     
     var body: some View {
+        
         NavigationView {
-            VStack {
-                Text(userData_vm.admin.name)
-                Text(userData_vm.admin.email)
-                Text(userData_vm.admin.password)
-                
-                if let imageurl = userData_vm.admin.profileUIimage {
-                    WebImage(url: imageurl)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 75, height: 75)
-                        .clipShape(Circle())
-                        .overlay(Circle().stroke(Color.gray, lineWidth: 2))
-                        .shadow(radius: 10)
+            ZStack {
+                Color("backgroundColor")
+                    .ignoresSafeArea()
+                VStack {
+                    Text(userData_vm.admin.name)
+                    Text(userData_vm.admin.email)
+                    Text(userData_vm.admin.password)
+                    
+                    if let imageurl = userData_vm.admin.profileUIimage {
+                        WebImage(url: imageurl)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 75, height: 75)
+                            .clipShape(Circle())
+                            .overlay(Circle().stroke(Color.gray, lineWidth: 2))
+                            .shadow(radius: 10)
+                    }
+                    
+                    
                 }
-                
-                
-            }
-            .sheet(isPresented: $isShowingImagePciker) {
-                ImagePicker2(image: $image)
-            }
-            .navigationTitle("Admin Profile")
-            .navigationBarTitleDisplayMode(.inline)
-            .onAppear {
-                userData_vm.getAdmin()
+                .sheet(isPresented: $isShowingImagePciker) {
+                    ImagePicker2(image: $image)
+                }
+                .navigationTitle("Admin Profile")
+                .navigationBarTitleDisplayMode(.inline)
+                .onAppear {
+                    userData_vm.getAdmin()
+                }
             }
         }
     }

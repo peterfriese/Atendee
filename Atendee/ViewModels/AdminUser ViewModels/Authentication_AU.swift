@@ -33,9 +33,6 @@ import FirebaseStorage
     let fireStore = Firestore.firestore()
     let fireStorage = Storage.storage()
     
-    let fileManager = FileManagerClass()
-    let fileName = "testing_09"
-    
     @Published var profileImageURL: URL?
     @Published var profileImage: URL?
     
@@ -170,6 +167,10 @@ import FirebaseStorage
             self?.current_admin_uid = Auth.auth().currentUser?.uid ?? "Unknown currentUser_uid"
             //self.fetchUsers()
             
+            //trin this to load the users and admin data.
+            self?.userData_vm.fetch_Admins2()
+            self?.userData_vm.fetch_Admins2()
+            
             DispatchQueue.main.async {
                 print("logged in 2")
                 self?.progressBar_rolling = false
@@ -262,6 +263,8 @@ import FirebaseStorage
                             print("Error storing user data: \(error.localizedDescription)")
                         } else {
                             print("User data stored successfully")
+                            self.userData_vm.fetchUsers2()
+                            self.userData_vm.fetch_Admins2()
                             DispatchQueue.main.async {
                                 print("Progressbar false 1")
                                 self.signedIn = true
@@ -279,10 +282,11 @@ import FirebaseStorage
     func admin_signOut() {
         //show progress view after logging out
         do {
-            //MARK: Delete the user data from the fireStore. It will erase the FM Data too.
-            userData_vm.deleteUsers() //use completion handler so that we do not sign out untill the data is succesfully erased. then sign out.
+            //MARK: Delete the admin data from the FM. It will erase the FM Data only.
+            //userData_vm.deletFM_admin2() //use completion handler so that we do not sign out untill the data is succesfully erased. then sign out.
             
             try Auth.auth().signOut()
+            userData_vm.deletFM_admin2() // it is only needed, no need of deleting firestore data.
             //self.isUserLoggedIn = false
             self.signedIn = false
             print("User logged out successfully")
